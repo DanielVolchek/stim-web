@@ -3,7 +3,7 @@
 import Cookies from "js-cookie";
 import { redirect } from "next/dist/server/api-utils";
 import { FormEvent, useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function UserModal() {
   const [name, setName] = useState("");
@@ -34,16 +34,30 @@ export default function UserModal() {
 
   return (
     // TODO: wrap in modal
-    <div className="">
-      <form onSubmit={onSubmit}>
+    <div className="absolute left-0 top-0 z-0 flex h-screen w-screen items-center justify-center bg-gray-800">
+      <form
+        onSubmit={onSubmit}
+        className="z-10 flex h-2/3 w-2/3 flex-col bg-white text-black"
+      >
         <div>
           <label htmlFor="agreeToTerms">Agree To Terms</label>
-          <input type="checkbox" name="agreeToTerms" />
+          <input
+            type="checkbox"
+            name="agreeToTerms"
+            checked={agreedToTerms}
+            onChange={(_) => setAgreedToTerms(!agreedToTerms)}
+          />
         </div>
         <div>
           <label htmlFor="name">Name</label>
-          <input type="checkbox" name="name" />
+          <input
+            type="text"
+            name="name"
+            value={name}
+            onChange={(e) => setName((_) => e.target.value)}
+          />
         </div>
+        <button type="submit">Submit</button>
       </form>
     </div>
   );
