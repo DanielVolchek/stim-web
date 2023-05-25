@@ -21,7 +21,7 @@ model Item {
   name String
   desc String
 
-  rentedBy   User?  @relation(fields: [rentedByID], references: [ID])
+  rentedBy   User?     @relation(fields: [rentedByID], references: [ID])
   rentedByID Int?
   rentedOn   DateTime?
   Image      Image?
