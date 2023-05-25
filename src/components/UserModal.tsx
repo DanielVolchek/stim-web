@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 import { redirect } from "next/dist/server/api-utils";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import prisma from "@/utils/prisma";
 
 export default function UserModal() {
   const [name, setName] = useState("");
@@ -12,8 +13,29 @@ export default function UserModal() {
   const router = useRouter();
 
   const defineNewUser = async () => {
-    Cookies.set("username", name);
+    const res = await fetch("/user/api", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: name,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (data.error) {
+      alert("Error: " + data.error);
+      console.error(data.error);
+      setName("");
+      setAgreedToTerms(false);
+    }
     // TODO: define a user in prisma
+    else {
+      Cookies.set("username", name);
+      router.push("/");
+    }
   };
 
   const onSubmit = async (event: FormEvent) => {
@@ -29,7 +51,6 @@ export default function UserModal() {
     }
 
     await defineNewUser();
-    router.push("/");
   };
 
   return (
