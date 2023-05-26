@@ -11,20 +11,38 @@ datasource db {
 }
 
 model User {
-  ID       Int    @id @default(autoincrement())
-  username String @unique
-  items    Item[]
+  ID           Int         @id @default(autoincrement())
+  username     String      @unique
+  passwordHash String
+  sessionToken String @unique
+  items        Item[]
+  Role         Role        @default(USER)
+  RentEvent    RentEvent?
+}
+
+enum Role {
+  USER
+  ADMIN
 }
 
 model Item {
-  ID   Int    @id @default(autoincrement())
-  name String
-  desc String
+  ID           Int         @id @default(autoincrement())
+  name         String
+  desc         String
+  purchaseLink String
+  Image        Image?
+  User         User?       @relation(fields: [userID], references: [ID])
+  userID       Int?
+  currentRentEvent RentEvent?
+}
 
-  rentedBy   User?     @relation(fields: [rentedByID], references: [ID])
-  rentedByID Int?
-  rentedOn   DateTime?
-  Image      Image?
+model RentEvent {
+  id         Int      @id @default(autoincrement())
+  item       Item     @relation(fields: [itemID], references: [ID])
+  itemID     Int @unique
+  rentedBy   User     @relation(fields: [rentedByID], references: [ID])
+  rentedByID Int     @unique
+  rentedOn   DateTime
 }
 
 model Image {
