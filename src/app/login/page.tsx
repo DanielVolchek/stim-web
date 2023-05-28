@@ -28,7 +28,7 @@ export default function Page() {
     }
 
     if (data.session) {
-      cookie.set("session", data.session);
+      cookie.set("session", data.session, { expires: 30, secure: true });
       router.push("/");
     }
   };
