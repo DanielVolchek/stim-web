@@ -11,12 +11,12 @@ datasource db {
 }
 
 model User {
-  ID           Int         @id @default(autoincrement())
-  username     String      @unique
+  ID           Int        @id @default(autoincrement())
+  username     String     @unique
   passwordHash String
-  sessionToken String @unique
+  sessions     String[]
   items        Item[]
-  Role         Role        @default(USER)
+  Role         Role       @default(USER)
   RentEvent    RentEvent?
 }
 
@@ -26,22 +26,22 @@ enum Role {
 }
 
 model Item {
-  ID           Int         @id @default(autoincrement())
-  name         String
-  desc         String
-  purchaseLink String
-  Image        Image?
-  User         User?       @relation(fields: [userID], references: [ID])
-  userID       Int?
+  ID               Int        @id @default(autoincrement())
+  name             String
+  desc             String
+  purchaseLink     String
+  Image            Image?
+  User             User?      @relation(fields: [userID], references: [ID])
+  userID           Int?
   currentRentEvent RentEvent?
 }
 
 model RentEvent {
   id         Int      @id @default(autoincrement())
   item       Item     @relation(fields: [itemID], references: [ID])
-  itemID     Int @unique
+  itemID     Int      @unique
   rentedBy   User     @relation(fields: [rentedByID], references: [ID])
-  rentedByID Int     @unique
+  rentedByID Int      @unique
   rentedOn   DateTime
 }
 
