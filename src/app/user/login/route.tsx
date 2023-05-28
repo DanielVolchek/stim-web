@@ -1,29 +1,16 @@
 import { NextResponse } from "next/server";
 import prisma from "@/utils/prisma";
-import hash from "crypto-js/md5";
-import { v4 as uuid } from "uuid";
+import {
+  createSessionOnUser,
+  generateSession,
+  hashPassword,
+} from "@/utils/auth";
 
 // attempts to login a user
+// if login is successful generate a token and respond with the token
 export async function GET(req: Request) {
   const body = await req.json();
-  const { token } = body;
 
-  if (token) {
-    const user = await prisma.user.findUnique({
-      where: {
-        sessionToken: token,
-      },
-    });
-
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
-    return NextResponse.json(
-      { message: "Login successful", token },
-      { status: 200 }
-    );
-  }
   const { username, password } = body;
 
   const user = await prisma.user.findUnique({
@@ -36,14 +23,20 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
 
-  const passwordHash = hash(password);
+  const passwordHash = hashPassword(password);
 
-  if (user.passwordHash !== passwordHash.toString()) {
+  if (user.passwordHash !== passwordHash) {
     return NextResponse.json({ error: "Invalid password" }, { status: 401 });
   }
 
+  // generate a new token
+  const token = generateSession();
+
+  // add token to user
+  await createSessionOnUser(user, token);
+
   return NextResponse.json(
-    { message: "Login successful", token: user.sessionToken },
+    { message: "Success", session: token },
     { status: 200 }
   );
 }
@@ -66,27 +59,36 @@ export async function POST(req: Request) {
     );
   }
 
-  if (!validateUsername) {
+  const validation = validateUsername(username);
+  if (validation.errors) {
     return NextResponse.json(
-      { error: "Username validation failed" },
+      {
+        error: "Username formatted incorrectly",
+        validationErrors: validation.errors,
+      },
       { status: 422 }
     );
   }
 
-  const passwordHash = hash(password).toString();
-  const sessionToken = uuid();
+  const passwordHash = hashPassword(password);
+  const sessionToken = generateSession();
 
   const newUser = await prisma.user.create({
-    data: { username, passwordHash, sessionToken },
+    data: { username, passwordHash },
   });
 
+  await createSessionOnUser(newUser, sessionToken);
+
   return NextResponse.json(
-    { message: "Success", token: sessionToken },
+    { message: "Success", session: sessionToken },
     { status: 200 }
   );
 }
 
 const validateUsername = (username: string) => {
   //todo;
-  return true;
+  let errors = "";
+  const noWhiteSpace = /\s/.test(username);
+  if (noWhiteSpace) errors += "Cannot Contain Whitespace;";
+  return { errors };
 };

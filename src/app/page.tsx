@@ -1,24 +1,22 @@
-import Image from "next/image";
-import UserModal from "@/components/UserModal";
 import { cookies } from "next/dist/client/components/headers";
-import prisma from "@/utils/prisma";
+import { URL } from "next/dist/compiled/@edge-runtime/primitives/url";
 import { redirect } from "next/navigation";
-import { NextResponse } from "next/server";
+import { parse } from "path";
 
 export default async function Home() {
   const cookieStore = cookies();
-  const sessionToken = cookieStore.get("token");
-  if (sessionToken)
-    await fetch("/user/login", {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ token: sessionToken }),
+  const sessionToken = cookieStore.get("session")?.value;
+  if (sessionToken) {
+    const res = await fetch("http://localhost:3000/user/admin", {
+      method: "POST",
+      body: JSON.stringify({ session: sessionToken }),
     });
+    const data = await res.json();
+    console.log(data);
+    if (data.error) return <p>Error...</p>;
+    if (data.role === "ADMIN") return <p>Admin</p>;
+    return <p>User</p>;
+  }
 
-  return (
-    <main>
-      <h1></h1>
-    </main>
-  );
+  redirect("/login");
 }

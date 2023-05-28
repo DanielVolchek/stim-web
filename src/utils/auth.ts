@@ -12,6 +12,7 @@ const hashPassword = (pass: string) => {
 };
 
 const getSessionByToken = async (token: string) => {
+  console.log("token: ", token);
   const session = await prisma.session.findFirst({ where: { token } });
   return session;
 };
@@ -25,7 +26,10 @@ const getUserBySession = async (session: Session) => {
     },
   });
 
-  return validateSessionTime(session) && user;
+  const valid = await validateSessionTime(session);
+  if (!valid || !user) return false;
+
+  return user;
 };
 
 const createSessionOnUser = async (user: User, sessionToken: string) => {
@@ -52,8 +56,12 @@ const createSessionOnUser = async (user: User, sessionToken: string) => {
   });
 };
 
-const validateSessionTime = (session: Session) => {
-  if (session.expiresAt.getTime() >= Date.now()) return false;
+const validateSessionTime = async (session: Session) => {
+  if (session.expiresAt.getTime() <= Date.now()) {
+    await prisma.session.delete({ where: { id: session.id } });
+    return false;
+  }
+  return true;
 };
 
 export {

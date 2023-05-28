@@ -1,11 +1,13 @@
 "use client";
 import cookie from "js-cookie";
+import { useRouter } from "next/navigation";
 
 import { FormEvent, useState } from "react";
 
 export default function Page() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -20,12 +22,14 @@ export default function Page() {
       }),
     });
     const data = await res.json();
+    console.log(data);
 
     if (data.error) {
     }
 
-    if (data.token) {
-      cookie.set("token", data.token);
+    if (data.session) {
+      cookie.set("session", data.session);
+      router.push("/");
     }
   };
 
