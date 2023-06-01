@@ -1,13 +1,13 @@
 import { cookies } from "next/dist/client/components/headers";
-import { URL } from "next/dist/compiled/@edge-runtime/primitives/url";
 import { redirect } from "next/navigation";
-import { parse } from "path";
+
+import URL from "@/components/url";
 
 export default async function Home() {
   const cookieStore = cookies();
   const sessionToken = cookieStore.get("session")?.value;
   if (sessionToken) {
-    const res = await fetch("http://localhost:3000/user/admin", {
+    const res = await fetch(`${URL}/user/admin`, {
       method: "POST",
       body: JSON.stringify({ session: sessionToken }),
     });
