@@ -11,7 +11,7 @@ datasource db {
 }
 
 model User {
-  id           Int        @id @default(autoincrement())
+  id           String        @id @default(uuid())
   username     String     @unique
   passwordHash String
   sessions     Session[]
@@ -26,36 +26,36 @@ enum Role {
 }
 
 model Session {
-  id        Int      @id @default(autoincrement())
+  id        String      @id @default(uuid())
   token     String   @unique
   expiresAt DateTime
   User      User     @relation(fields: [userID], references: [id])
-  userID    Int
+  userID    String
 }
 
 model Item {
-  id               Int        @id @default(autoincrement())
+  id               String        @id @default(uuid())
   name             String
   desc             String
   purchaseLink     String
   Image            Image?
   User             User?      @relation(fields: [userID], references: [id])
-  userID           Int?
+  userID           String?
   currentRentEvent RentEvent?
 }
 
 model RentEvent {
-  id         Int      @id @default(autoincrement())
+  id         String      @id @default(uuid())
   item       Item     @relation(fields: [itemID], references: [id])
-  itemID     Int      @unique
+  itemID     String      @unique
   rentedBy   User     @relation(fields: [rentedByID], references: [id])
-  rentedByID Int      @unique
+  rentedByID String      @unique
   rentedOn   DateTime
 }
 
 model Image {
-  id     Int    @id @default(autoincrement())
+  id     String    @id @default(uuid())
   url    String
   item   Item   @relation(fields: [itemID], references: [id])
-  itemID Int    @unique
+  itemID String    @unique
 }
