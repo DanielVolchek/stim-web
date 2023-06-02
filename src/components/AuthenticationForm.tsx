@@ -1,8 +1,9 @@
 "use client";
+import useUserStore from "@/utils/useUserStore";
 import cookie from "js-cookie";
 import { useRouter } from "next/navigation";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
 type Props = {
   type: "register" | "login";
@@ -12,6 +13,11 @@ export default function AuthenticationForm({ type }: Props) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+
+  const [user, updateUser] = useUserStore((state) => [
+    state.user,
+    state.updateUser,
+  ]);
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -35,9 +41,16 @@ export default function AuthenticationForm({ type }: Props) {
 
     if (data.session) {
       cookie.set("session", data.session, { expires: 30, secure: true });
-      router.push("/");
+
+      if (data.user) {
+        updateUser(data.user);
+      }
     }
   };
+
+  useEffect(() => {
+    if (user !== null) router.push("/");
+  }, [router, user]);
 
   return (
     <form onSubmit={handleSubmit}>
