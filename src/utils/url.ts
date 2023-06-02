@@ -1,4 +1,4 @@
-let URL;
+let URL: string;
 
 const PORT = process.env.PORT || 3000;
 
