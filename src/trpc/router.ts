@@ -3,7 +3,9 @@ import type { CreateNextContextOptions } from "@trpc/server/adapters/next";
 import * as z from "zod";
 
 import { User } from "@prisma/client";
-import { authenticationFlow } from "../auth";
+import { authenticationFlow } from "@/utils/auth";
+
+import prisma from "@/utils/prisma";
 
 const userSchema = z.object({
   id: z.string(),
@@ -18,12 +20,15 @@ function validateUser(user: unknown): User {
 
 export async function createContext(opts: CreateNextContextOptions) {
   let user;
+  let db;
   try {
     user = validateUser(await authenticationFlow(opts.req));
+    db = prisma;
   } catch (error) {}
 
   return {
     user,
+    db,
   };
 }
 
