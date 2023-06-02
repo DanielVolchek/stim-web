@@ -2,6 +2,8 @@ import hash from "crypto-js/md5";
 import { v4 as uuid } from "uuid";
 import prisma from "./prisma";
 import { User, Session } from "@prisma/client";
+import { NextRequest } from "next/server";
+import { NextApiRequest } from "next";
 
 const generateSession = () => {
   return uuid();
@@ -68,10 +70,12 @@ const unauthorizedResponse = (reason: string) => {
   throw new Error(reason);
 };
 
-const authenticationFlow = async (body: { session: string }) => {
-  const sessionToken = body.session;
+const authenticationFlow = async (req: NextApiRequest) => {
+  const { body, query } = req;
 
-  if (!sessionToken) return unauthorizedResponse("cookie");
+  const sessionToken = query.session ?? body.session;
+
+  if (!sessionToken) return unauthorizedResponse("session token not provided");
 
   const session = await getSessionByToken(sessionToken);
   if (!session) return unauthorizedResponse("token");
