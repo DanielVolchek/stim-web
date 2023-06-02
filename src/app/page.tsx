@@ -1,7 +1,7 @@
 import { cookies } from "next/dist/client/components/headers";
 import { redirect } from "next/navigation";
 
-import URL from "@/components/url";
+import URL from "@/utils/url";
 
 export default async function Home() {
   const cookieStore = cookies();
@@ -11,10 +11,10 @@ export default async function Home() {
       method: "POST",
       body: JSON.stringify({ session: sessionToken }),
     });
+
     const data = await res.json();
-    console.log(data);
-    if (data.error) return <p>Error...</p>;
-    if (data.role === "ADMIN") return <p>Admin</p>;
+    if (data.error) return redirect("/login");
+    if (data.user.role === "ADMIN") return <p>Admin</p>;
     return <p>User</p>;
   }
 
