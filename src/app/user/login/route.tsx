@@ -36,7 +36,7 @@ export async function GET(req: Request) {
   await createSessionOnUser(user, token);
 
   return NextResponse.json(
-    { message: "Success", session: token },
+    { message: "Success", session: token, user: user },
     { status: 200 }
   );
 }
@@ -80,7 +80,7 @@ export async function POST(req: Request) {
   await createSessionOnUser(newUser, sessionToken);
 
   return NextResponse.json(
-    { message: "Success", session: sessionToken },
+    { message: "Success", session: sessionToken, user: newUser },
     { status: 200 }
   );
 }
