@@ -7,7 +7,7 @@ export default async function Home() {
   const cookieStore = cookies();
   const sessionToken = cookieStore.get("session")?.value;
   if (sessionToken) {
-    const res = await fetch(`${URL}/user/admin`, {
+    const res = await fetch(`${URL()}/user/admin`, {
       method: "POST",
       body: JSON.stringify({ session: sessionToken }),
     });

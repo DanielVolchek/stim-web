@@ -1,11 +1,9 @@
-let URL: string;
+const GetBaseURL = () => {
+  if (typeof window !== "undefined") return ""; // browser should use relative url
 
-const PORT = process.env.PORT || 3000;
+  if (process.env.NODE_ENV === "production")
+    return process.env.PATH || "https://www.example.com";
+  return `http://localhost:${process.env.PORT || 3000}`;
+};
 
-if (process.env.NODE_ENV === "production") {
-  URL = "https://www.example.com";
-} else {
-  URL = `http://localhost:${PORT}`;
-}
-
-export default URL;
+export default GetBaseURL;
