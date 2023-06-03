@@ -14,10 +14,12 @@ export default function AuthenticationForm({ type }: Props) {
   const [password, setPassword] = useState("");
   const router = useRouter();
 
-  const [user, updateUser] = useUserStore((state) => [
-    state.user,
-    state.updateUser,
-  ]);
+  // const [user, updateUser] = useUserStore((state) => [
+  //   state.user,
+  //   state.updateUser,
+  // ]);
+
+  const user = useUserStore((state) => state.user);
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -34,7 +36,6 @@ export default function AuthenticationForm({ type }: Props) {
       }),
     });
     const data = await res.json();
-    console.log(data);
 
     if (data.error) {
     }
@@ -42,9 +43,11 @@ export default function AuthenticationForm({ type }: Props) {
     if (data.session) {
       cookie.set("session", data.session, { expires: 30, secure: true });
 
-      if (data.user) {
-        updateUser(data.user);
-      }
+      router.push("/");
+
+      // if (data.user) {
+      //   updateUser(data.user);
+      // }
     }
   };
 
