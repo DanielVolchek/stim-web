@@ -16,7 +16,6 @@ const hashPassword = (pass: string) => {
 };
 
 const getSessionByToken = async (token: string) => {
-  console.log("token: ", token);
   const session = await prisma.session.findFirst({ where: { token } });
   return session;
 };
@@ -88,17 +87,17 @@ const getSession = async (
   cookieStore: ReadonlyRequestCookies
 ): Promise<User | null> => {
   const sessionToken = cookieStore.get("session")?.value;
-  if (sessionToken) {
-    const res = await fetch(`${getURL()}/user/`, {
-      method: "POST",
-      body: JSON.stringify({ session: sessionToken }),
-    });
-    const data = await res.json();
-    const parse = userSchema.safeParse(data);
-    if (parse.success) return parse.data;
-    console.log(parse.error);
-    return null;
-  }
+  if (!sessionToken) return null;
+
+  const res = await fetch(`${getURL()}/user/`, {
+    method: "POST",
+    body: JSON.stringify({ session: sessionToken }),
+  });
+  const data = await res.json();
+
+  const parse = userSchema.safeParse(data.user);
+  if (parse.success) return parse.data;
+  console.log(parse.error);
   return null;
 };
 

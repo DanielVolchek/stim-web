@@ -6,5 +6,6 @@ export default async function Item({ params: { id } }: Props) {
 
   // on item page check if an item has been rented by the current user
   // if that is the case render a return item button
+
   return <p>{item?.name}</p>;
 }
