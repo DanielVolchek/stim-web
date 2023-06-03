@@ -6,7 +6,7 @@ export async function POST(req: Request) {
 
   let user;
   try {
-    user = await authenticationFlow(body);
+    user = await authenticationFlow(body.session);
   } catch (error) {
     return NextResponse.json(
       { error: "Unauthorized: " + error },
@@ -14,5 +14,5 @@ export async function POST(req: Request) {
     );
   }
 
-  return NextResponse.json({ role: user.Role }, { status: 200 });
+  return NextResponse.json({ user }, { status: 200 });
 }
