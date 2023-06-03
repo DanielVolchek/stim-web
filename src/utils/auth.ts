@@ -5,6 +5,7 @@ import { User, Session } from "@prisma/client";
 import { cookies } from "next/dist/client/components/headers";
 import { getURL } from "./url";
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
+import { userSchema } from "./zod";
 
 const generateSession = () => {
   return uuid();
@@ -83,7 +84,9 @@ const authenticationFlow = async (sessionToken: string) => {
   return user;
 };
 
-const getSession = async (cookieStore: ReadonlyRequestCookies) => {
+const getSession = async (
+  cookieStore: ReadonlyRequestCookies
+): Promise<User | null> => {
   const sessionToken = cookieStore.get("session")?.value;
   if (sessionToken) {
     const res = await fetch(`${getURL()}/user/`, {
@@ -91,7 +94,10 @@ const getSession = async (cookieStore: ReadonlyRequestCookies) => {
       body: JSON.stringify({ session: sessionToken }),
     });
     const data = await res.json();
-    return data;
+    const parse = userSchema.safeParse(data);
+    if (parse.success) return parse.data;
+    console.log(parse.error);
+    return null;
   }
   return null;
 };
