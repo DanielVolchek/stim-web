@@ -68,16 +68,14 @@ const unauthorizedResponse = (reason: string) => {
   throw new Error(reason);
 };
 
-const authenticationFlow = async (body: { session: string }) => {
-  const sessionToken = body.session;
-
-  if (!sessionToken) return unauthorizedResponse("cookie");
+const authenticationFlow = async (sessionToken: string) => {
+  if (!sessionToken) return unauthorizedResponse("No token provided");
 
   const session = await getSessionByToken(sessionToken);
-  if (!session) return unauthorizedResponse("token");
+  if (!session) return unauthorizedResponse("token invalid");
 
   const user = await getUserBySession(session);
-  if (!user) return unauthorizedResponse("session");
+  if (!user) return unauthorizedResponse("session invalid");
 
   return user;
 };
