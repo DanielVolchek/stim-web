@@ -1,9 +1,12 @@
 import hash from "crypto-js/md5";
 import { v4 as uuid } from "uuid";
 import prisma from "./prisma";
+import baseURL from "./url";
 import { User, Session } from "@prisma/client";
-import { NextRequest } from "next/server";
-import { NextApiRequest } from "next";
+import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
+import { userSchema } from "./zod";
+
+type SafeUser = Omit<User, "passwordHash">;
 
 const generateSession = () => {
   return uuid();
@@ -14,7 +17,6 @@ const hashPassword = (pass: string) => {
 };
 
 const getSessionByToken = async (token: string) => {
-  console.log("token: ", token);
   const session = await prisma.session.findFirst({ where: { token } });
   return session;
 };
@@ -76,21 +78,42 @@ const authenticationFlow = async (req: NextApiRequest) => {
   const sessionToken = query.session ?? body.session;
 
   if (!sessionToken) return unauthorizedResponse("session token not provided");
+const authenticationFlow = async (sessionToken: string) => {
+  if (!sessionToken) return unauthorizedResponse("No token provided");
 
   const session = await getSessionByToken(sessionToken);
-  if (!session) return unauthorizedResponse("token");
+  if (!session) return unauthorizedResponse("token invalid");
 
   const user = await getUserBySession(session);
-  if (!user) return unauthorizedResponse("session");
+  if (!user) return unauthorizedResponse("session invalid");
 
   return user;
 };
 
+const getSession = async (
+  sessionToken: string | undefined
+): Promise<SafeUser | null> => {
+  if (!sessionToken) return null;
+
+  const res = await fetch(`${baseURL()}/user/`, {
+    method: "POST",
+    body: JSON.stringify({ session: sessionToken }),
+  });
+  const data = await res.json();
+
+  const parse = userSchema.safeParse(data.user);
+  if (parse.success) return parse.data;
+  console.log(parse.error);
+  return null;
+};
+
 export {
+  type SafeUser,
   generateSession,
   hashPassword,
   getUserBySession,
   createSessionOnUser,
   getSessionByToken,
   authenticationFlow,
+  getSession,
 };

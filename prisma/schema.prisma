@@ -16,8 +16,8 @@ model User {
   passwordHash String
   sessions     Session[]
   items        Item[]
-  Role         Role       @default(USER)
-  RentEvent    RentEvent?
+  role         Role       @default(USER)
+  rentEvent    RentEvent?
 }
 
 enum Role {
@@ -30,6 +30,7 @@ model Session {
   token     String   @unique
   expiresAt DateTime
   User      User     @relation(fields: [userID], references: [id])
+  user      User     @relation(fields: [userID], references: [id])
   userID    String
 }
 
@@ -38,8 +39,8 @@ model Item {
   name             String
   desc             String
   purchaseLink     String
-  Image            Image?
-  User             User?      @relation(fields: [userID], references: [id])
+  image            Image?
+  user             User?      @relation(fields: [userID], references: [id])
   userID           String?
   currentRentEvent RentEvent?
 }

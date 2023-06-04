@@ -1,22 +1,43 @@
 import { cookies } from "next/dist/client/components/headers";
 import { redirect } from "next/navigation";
 
-import URL from "@/utils/url";
+import { getSession } from "@/utils/auth";
+
+import useUserStore from "@/utils/useUserStore";
+import Test from "@/components/Test";
 
 export default async function Home() {
-  const cookieStore = cookies();
-  const sessionToken = cookieStore.get("session")?.value;
-  if (sessionToken) {
-    const res = await fetch(`${URL()}/user/admin`, {
-      method: "POST",
-      body: JSON.stringify({ session: sessionToken }),
-    });
+  const setSession = async () => {
+    const cookieStore = cookies();
 
-    const data = await res.json();
-    if (data.error) return redirect("/login");
-    if (data.user.role === "ADMIN") return <p>Admin</p>;
-    return <p>User</p>;
-  }
+    const session = cookieStore.get("session")?.value;
 
-  redirect("/login");
+    const user = await getSession(session);
+
+    if (!user) return redirect("/login");
+
+    // set the user in the session
+    useUserStore.setState({ user, session });
+  };
+
+  const session = useUserStore.getState().session;
+  if (!session) await setSession();
+  return <Test />;
+
+  // if admin
+  // redirect to /admin
+  // or render page differently as if you're an admin
+  // if rendering differently than create a zustand store for admin
+
+  // fetch and render items down here
+  // render items down here
+
+  // if rented item render that on top of the page
+
+  // render the rest of the items down here
+  // item should be in a clickable card
+
+  // after clicking redirect to item page
+
+  // on item page
 }

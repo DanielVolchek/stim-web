@@ -10,7 +10,6 @@ export default function Logout() {
     event.preventDefault();
     const res = await fetch("/user/logout");
     const data = await res.json();
-    console.log(data);
     router.push("/");
   };
 
