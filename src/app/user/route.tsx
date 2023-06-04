@@ -1,5 +1,3 @@
-import { authenticationFlow } from "@/utils/auth";
-import { NextResponse } from "next/server";
 import { NextResponse } from "next/server";
 import { authenticationFlow } from "@/utils/auth";
 
@@ -17,5 +15,5 @@ export async function POST(req: Request) {
   }
 
   let { passwordHash, ...safeUser } = user;
-  return NextResponse.json({ ...safeUser }, { status: 200 });
+  return NextResponse.json({ user: safeUser }, { status: 200 });
 }

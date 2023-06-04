@@ -1,9 +1,9 @@
 import hash from "crypto-js/md5";
 import { v4 as uuid } from "uuid";
+import { User, Session } from "@prisma/client";
+
 import prisma from "./prisma";
 import baseURL from "./url";
-import { User, Session } from "@prisma/client";
-import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { userSchema } from "./zod";
 
 type SafeUser = Omit<User, "passwordHash">;
@@ -72,12 +72,6 @@ const unauthorizedResponse = (reason: string) => {
   throw new Error(reason);
 };
 
-const authenticationFlow = async (req: NextApiRequest) => {
-  const { body, query } = req;
-
-  const sessionToken = query.session ?? body.session;
-
-  if (!sessionToken) return unauthorizedResponse("session token not provided");
 const authenticationFlow = async (sessionToken: string) => {
   if (!sessionToken) return unauthorizedResponse("No token provided");
 
