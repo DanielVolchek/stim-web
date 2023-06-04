@@ -6,6 +6,8 @@ import { User, Session } from "@prisma/client";
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { userSchema } from "./zod";
 
+type SafeUser = Omit<User, "passwordHash">;
+
 const generateSession = () => {
   return uuid();
 };
@@ -84,7 +86,7 @@ const authenticationFlow = async (sessionToken: string) => {
 
 const getSession = async (
   sessionToken: string | undefined
-): Promise<User | null> => {
+): Promise<SafeUser | null> => {
   if (!sessionToken) return null;
 
   const res = await fetch(`${baseURL()}/user/`, {
@@ -100,6 +102,7 @@ const getSession = async (
 };
 
 export {
+  type SafeUser,
   generateSession,
   hashPassword,
   getUserBySession,

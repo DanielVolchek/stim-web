@@ -1,19 +1,19 @@
 import { create } from "zustand";
-import { User } from "@prisma/client";
+import type { SafeUser } from "./auth";
 
 type State = {
-  user: Omit<User, "passwordHash"> | null;
+  user: SafeUser | null;
   session: string | null;
 };
 
 type Actions = {
-  updateUser: (user: User) => void;
+  updateUser: (user: SafeUser) => void;
 };
 
 const useUserStore = create<State & Actions>((set) => ({
   user: null,
   session: null,
-  updateUser: (user: User) => set(() => ({ user })),
+  updateUser: (user: SafeUser) => set(() => ({ user })),
 }));
 
 export default useUserStore;
