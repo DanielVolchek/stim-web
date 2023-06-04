@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
   let user;
   try {
     user = await authenticationFlow(session);
-    if (user.Role !== "ADMIN") throw new Error("Admin privileges required");
+    if (user.role !== "ADMIN") throw new Error("Admin privileges required");
   } catch (err) {
     return NextResponse.json(
       { error: `Unauthorized: ${err}` },
