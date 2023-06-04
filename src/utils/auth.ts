@@ -1,9 +1,8 @@
 import hash from "crypto-js/md5";
 import { v4 as uuid } from "uuid";
 import prisma from "./prisma";
+import baseURL from "./url";
 import { User, Session } from "@prisma/client";
-import { cookies } from "next/dist/client/components/headers";
-import { getURL } from "./url";
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { userSchema } from "./zod";
 
@@ -84,12 +83,11 @@ const authenticationFlow = async (sessionToken: string) => {
 };
 
 const getSession = async (
-  cookieStore: ReadonlyRequestCookies
+  sessionToken: string | undefined
 ): Promise<User | null> => {
-  const sessionToken = cookieStore.get("session")?.value;
   if (!sessionToken) return null;
 
-  const res = await fetch(`${getURL()}/user/`, {
+  const res = await fetch(`${baseURL()}/user/`, {
     method: "POST",
     body: JSON.stringify({ session: sessionToken }),
   });
