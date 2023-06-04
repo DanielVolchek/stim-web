@@ -3,11 +3,26 @@ import { redirect } from "next/navigation";
 
 import { getSession } from "@/utils/auth";
 
-export default async function Home() {
-  const cookieStore = cookies();
+import useUserStore from "@/utils/useUserStore";
+import Test from "@/components/Test";
 
-  const session = await getSession(cookieStore);
-  if (!session) return redirect("/login");
+export default async function Home() {
+  const setSession = async () => {
+    const cookieStore = cookies();
+
+    const session = cookieStore.get("session")?.value;
+
+    const user = await getSession(session);
+
+    if (!user) return redirect("/login");
+
+    // set the user in the session
+    useUserStore.setState({ user, session });
+  };
+
+  const session = useUserStore.getState().session;
+  if (!session) await setSession();
+  return <Test />;
 
   // if admin
   // redirect to /admin
