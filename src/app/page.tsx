@@ -20,8 +20,8 @@ export default async function Home() {
     useUserStore.setState({ user, session });
   };
 
-  const session = useUserStore.getState().session;
-  if (!session) await setSession();
+  // const user = useUserStore.getState().user;
+  if (!user) await setSession();
   return <Test />;
 
   // if admin
