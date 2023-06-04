@@ -14,5 +14,6 @@ export async function POST(req: Request) {
     );
   }
 
-  return NextResponse.json({ user }, { status: 200 });
+  let { passwordHash, ...safeUser } = user;
+  return NextResponse.json({ ...safeUser }, { status: 200 });
 }
