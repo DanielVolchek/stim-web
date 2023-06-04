@@ -42,12 +42,7 @@ export default function AuthenticationForm({ type }: Props) {
 
     if (data.session) {
       cookie.set("session", data.session, { expires: 30, secure: true });
-
       router.push("/");
-
-      // if (data.user) {
-      //   updateUser(data.user);
-      // }
     }
   };
 
