@@ -29,7 +29,6 @@ model Session {
   id        String      @id @default(uuid())
   token     String   @unique
   expiresAt DateTime
-  User      User     @relation(fields: [userID], references: [id])
   user      User     @relation(fields: [userID], references: [id])
   userID    String
 }
