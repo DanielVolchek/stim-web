@@ -34,7 +34,7 @@ model Session {
 }
 
 model Item {
-  id               String        @id @default(uuid())
+  id               Int        @id @default(autoincrement())
   name             String
   desc             String
   purchaseLink     String
@@ -45,17 +45,17 @@ model Item {
 }
 
 model RentEvent {
-  id         String      @id @default(uuid())
+  id         Int      @id @default(autoincrement())
   item       Item     @relation(fields: [itemID], references: [id])
-  itemID     String      @unique
+  itemID     Int      @unique
   rentedBy   User     @relation(fields: [rentedByID], references: [id])
   rentedByID String      @unique
   rentedOn   DateTime
 }
 
 model Image {
-  id     String    @id @default(uuid())
+  id     Int    @id @default(autoincrement())
   url    String
   item   Item   @relation(fields: [itemID], references: [id])
-  itemID String    @unique
+  itemID Int    @unique
 }
