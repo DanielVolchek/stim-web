@@ -22,12 +22,13 @@ export default function Page() {
       }),
     });
     const data = await res.json();
+    console.log(data);
 
     if (data.error) {
     }
 
     if (data.session) {
-      cookie.set("session", data.session, { expires: 30, secure: true });
+      cookie.set("session", data.session, { expires: 31, secure: true });
       router.push("/");
     }
   };
@@ -54,6 +55,16 @@ export default function Page() {
       <button type="submit" className="bg-red rounded-md px-4 py-2">
         Submit
       </button>
+
+      <button
+        onClick={() => {
+          cookie.set("session", "");
+        }}
+      >
+        Delete Cookie
+      </button>
+
+      <p className="block">Cookie: {cookie.get("session")}</p>
     </form>
   );
 }

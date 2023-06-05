@@ -5,6 +5,8 @@ import { User, Session } from "@prisma/client";
 import prisma from "./prisma";
 import baseURL from "./url";
 import { userSchema } from "./zod";
+import { cookies } from "next/dist/client/components/headers";
+import { redirect } from "next/navigation";
 
 type SafeUser = Omit<User, "passwordHash">;
 
@@ -84,7 +86,7 @@ const authenticationFlow = async (sessionToken: string) => {
   return user;
 };
 
-const getSession = async (
+const getSessionHelper = async (
   sessionToken: string | undefined
 ): Promise<SafeUser | null> => {
   if (!sessionToken) return null;
@@ -99,6 +101,16 @@ const getSession = async (
   if (parse.success) return parse.data;
   console.log(parse.error);
   return null;
+};
+
+const getSession = async (): Promise<SafeUser | null> => {
+  const cookieStore = cookies();
+
+  console.log("getting session");
+
+  const sessionToken = cookieStore.get("session")?.value;
+
+  return getSessionHelper(sessionToken);
 };
 
 export {

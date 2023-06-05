@@ -1,30 +1,20 @@
-import { cookies } from "next/dist/client/components/headers";
 import { redirect } from "next/navigation";
-
-import { getSession } from "@/utils/auth";
-
-import useUserStore from "@/utils/useUserStore";
-import Test from "@/components/Test";
+import { SafeUser, getSession } from "@/utils/auth";
+import ItemList from "@/components/ItemList";
 
 export default async function Home() {
   const setSession = async () => {
-    const cookieStore = cookies();
+    const user = await getSession();
 
-    const session = cookieStore.get("session")?.value;
-
-    const user = await getSession(session);
-
-    if (!user) return redirect("/login");
-
-    // set the user in the session
-    useUserStore.setState({ user, session });
+    return user;
   };
 
-  // const user = useUserStore.getState().user;
-  if (!user) await setSession();
-  return <Test />;
+  const user = await setSession();
 
   // if admin
+  if (user?.role === "ADMIN") return redirect("/admin");
+
+  return <ItemList user={user as SafeUser} />;
   // redirect to /admin
   // or render page differently as if you're an admin
   // if rendering differently than create a zustand store for admin

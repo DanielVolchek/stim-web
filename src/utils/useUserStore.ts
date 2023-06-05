@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { SafeUser } from "./auth";
 
 type State = {
-  user: SafeUser | null;
+  user: SafeUser | null | undefined;
   session: string | null;
 };
 
