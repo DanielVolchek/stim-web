@@ -1,12 +1,10 @@
-import { SafeUser } from "@/utils/auth";
+import { SafeUser, getUserSession } from "@/utils/auth";
 import prisma from "@/utils/prisma";
 import ItemCard from "./ItemCard";
 
-type Props = {
-  user?: SafeUser | null;
-};
+export default async function ItemList() {
+  const user = await getUserSession();
 
-export default async function ItemList({ user }: Props) {
   const items = await prisma.item.findMany({
     include: { image: true, currentRentEvent: true },
   });
