@@ -7,6 +7,7 @@ import baseURL from "./url";
 import { userSchema } from "./zod";
 import { cookies } from "next/dist/client/components/headers";
 import { redirect } from "next/navigation";
+import { NextRequest, NextResponse } from "next/server";
 
 type SafeUser = Omit<User, "passwordHash">;
 
@@ -96,7 +97,7 @@ const getSessionHelper = async (
     "Set-Cookie",
     `session=${sessionToken}; SameSite=strict; Secure`
   );
-  // ${baseURL()}/user?session=${sessionToken}
+
   const res = await fetch(`${baseURL()}/user`, {
     method: "GET",
     headers,
@@ -117,13 +118,78 @@ const getUserSession = async (): Promise<SafeUser | null> => {
   return getSessionHelper(sessionToken);
 };
 
+const LoginOrRegisterUser = async (
+  req: NextRequest,
+  type: "LOGIN" | "REGISTER"
+) => {
+  const body = await req.json();
+
+  const { username, password } = body;
+
+  let user = await prisma.user.findUnique({
+    where: {
+      username,
+    },
+  });
+
+  const passwordHash = hashPassword(password);
+  if (type === "LOGIN") {
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+    if (user.passwordHash !== passwordHash) {
+      return NextResponse.json({ error: "Invalid password" }, { status: 401 });
+    }
+  } else {
+    if (user) {
+      return NextResponse.json(
+        { error: "Username is already in use" },
+        { status: 409 }
+      );
+    }
+
+    const validation = validateUsername(username);
+    if (validation.errors) {
+      return NextResponse.json(
+        {
+          error: "Username formatted incorrectly",
+          validationErrors: validation.errors,
+        },
+        { status: 422 }
+      );
+    }
+
+    user = await prisma.user.create({
+      data: { username, passwordHash },
+    });
+  }
+
+  // generate a new token
+  const token = generateSession();
+
+  // add token to user
+  await createSessionOnUser(user, token);
+
+  return NextResponse.json(
+    { message: `Successfully ${type}ed user ${username}`, session: token },
+    { status: 200 }
+  );
+};
+
+const validateUsername = (username: string) => {
+  //todo;
+  let errors = "";
+  const noWhiteSpace = /\s/.test(username);
+  if (noWhiteSpace) errors += "Cannot Contain Whitespace;";
+  return { errors };
+};
+
 export {
   type SafeUser,
   generateSession,
   hashPassword,
-  getUserBySession,
   createSessionOnUser,
-  getSessionByToken,
   authenticationFlow,
   getUserSession,
+  LoginOrRegisterUser,
 };
