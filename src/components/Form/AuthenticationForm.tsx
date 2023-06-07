@@ -1,5 +1,4 @@
 "use client";
-import useUserStore from "@/utils/useUserStore";
 import cookie from "js-cookie";
 import { useRouter } from "next/navigation";
 
@@ -12,19 +11,11 @@ type Props = {
 export default function AuthenticationForm({ type }: Props) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
   const router = useRouter();
-
-  // const [user, updateUser] = useUserStore((state) => [
-  //   state.user,
-  //   state.updateUser,
-  // ]);
-
-  const user = useUserStore((state) => state.user);
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    // TODO
-    // this does register right now not login
     const res = await fetch(`/user/${type}`, {
       method: "POST",
       headers: {
@@ -36,22 +27,16 @@ export default function AuthenticationForm({ type }: Props) {
       }),
     });
     const data = await res.json();
+    console.log(data);
 
     if (data.error) {
     }
 
     if (data.session) {
-      cookie.set("session", data.session, { expires: 30, secure: true });
-
-      if (data.user) {
-        updateUser(data.user);
-      }
+      cookie.set("session", data.session, { expires: 31, secure: true });
+      router.push("/");
     }
   };
-
-  useEffect(() => {
-    if (user !== null) router.push("/");
-  }, [router, user]);
 
   return (
     <form onSubmit={handleSubmit}>

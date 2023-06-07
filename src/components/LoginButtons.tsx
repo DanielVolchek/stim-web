@@ -25,7 +25,7 @@ const ActionButton = ({ path }: { path: string }) => {
   const router = useRouter();
 
   const onClick = () => {
-    router.push(`/user/${path.toLowerCase()}`);
+    router.push(`/${path.toLowerCase()}`);
   };
 
   return <button onClick={onClick}>{path}</button>;
