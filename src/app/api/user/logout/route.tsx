@@ -5,9 +5,11 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   const body = await req.json();
 
+  const session = body.session;
+
   let user;
   try {
-    user = await authenticationFlow(body);
+    user = await authenticationFlow(session);
   } catch (error) {
     return NextResponse.json(
       { error: "Unauthorized: " + error },

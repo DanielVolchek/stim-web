@@ -1,30 +1,21 @@
-"use client";
-
 import baseURL from "@/utils/url";
-import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { cookies } from "next/dist/client/components/headers";
+import { redirect } from "next/navigation";
 
-export default function Logout() {
-  const router = useRouter();
+type Props = {
+  searchParams: { session: string };
+};
 
-  const hitOnce = useRef(false);
+export default async function Logout({ searchParams: { session } }: Props) {
+  const cookieStore = cookies();
+  // const session = cookieStore.get("session");
 
-  useEffect(() => {
-    const session = Cookies.get("session") as string;
+  if (!session) redirect("/");
 
-    if (hitOnce.current) return;
-
-    fetch(`${baseURL()}/api/user/logout`, {
-      method: "POST",
-      body: JSON.stringify({ session }),
-    }).then(() => {
-      Cookies.remove("session");
-      router.push("/");
-    });
-
-    hitOnce.current = true;
+  await fetch(`${baseURL()}/api/user/logout`, {
+    method: "POST",
+    body: JSON.stringify({ session }),
   });
 
-  return <p>Loading...</p>;
+  redirect("/");
 }

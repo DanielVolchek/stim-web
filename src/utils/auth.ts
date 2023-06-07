@@ -6,7 +6,6 @@ import prisma from "./prisma";
 import baseURL from "./url";
 import { userSchema } from "./zod";
 import { cookies } from "next/dist/client/components/headers";
-import { redirect } from "next/navigation";
 import { NextRequest, NextResponse } from "next/server";
 
 type SafeUser = Omit<User, "passwordHash">;
@@ -115,7 +114,9 @@ const getUserSession = async (): Promise<SafeUser | null> => {
 
   const sessionToken = cookieStore.get("session")?.value;
 
-  return getSessionHelper(sessionToken);
+  console.log(sessionToken);
+
+  return await getSessionHelper(sessionToken);
 };
 
 const LoginOrRegisterUser = async (
@@ -171,7 +172,10 @@ const LoginOrRegisterUser = async (
   await createSessionOnUser(user, token);
 
   return NextResponse.json(
-    { message: `Successfully ${type}ed user ${username}`, session: token },
+    {
+      message: `Successfully ${type.toLowerCase()}ed user ${username}`,
+      session: token,
+    },
     { status: 200 }
   );
 };

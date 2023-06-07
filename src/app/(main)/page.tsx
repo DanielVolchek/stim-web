@@ -3,7 +3,8 @@ import { SafeUser, getUserSession } from "@/utils/auth";
 import ItemList from "@/components/ItemList";
 
 export default async function Home() {
-  return <ItemList />;
+  return <div></div>;
+  // return <ItemList />;
   // redirect to /admin
   // or render page differently as if you're an admin
   // if rendering differently than create a zustand store for admin
