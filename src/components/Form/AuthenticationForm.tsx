@@ -1,4 +1,5 @@
 "use client";
+import baseURL from "@/utils/url";
 import cookie from "js-cookie";
 import { useRouter } from "next/navigation";
 
@@ -16,7 +17,7 @@ export default function AuthenticationForm({ type }: Props) {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    const res = await fetch(`/user/${type}`, {
+    const res = await fetch(`${baseURL()}/api/user/${type}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

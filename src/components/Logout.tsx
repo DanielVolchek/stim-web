@@ -2,13 +2,14 @@
 
 import { FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import baseURL from "@/utils/url";
 
 export default function Logout() {
   const router = useRouter();
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    const res = await fetch("/user/logout");
+    const res = await fetch(`${baseURL()}/api/user/logout`);
     const data = await res.json();
     router.push("/");
   };

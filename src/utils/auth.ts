@@ -98,7 +98,7 @@ const getSessionHelper = async (
     `session=${sessionToken}; SameSite=strict; Secure`
   );
 
-  const res = await fetch(`${baseURL()}/user`, {
+  const res = await fetch(`${baseURL()}/api/user`, {
     method: "GET",
     headers,
   });

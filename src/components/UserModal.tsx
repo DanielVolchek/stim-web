@@ -1,10 +1,9 @@
 "use client";
 
 import Cookies from "js-cookie";
-import { redirect } from "next/dist/server/api-utils";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import prisma from "@/utils/prisma";
+import baseURL from "@/utils/url";
 
 export default function UserModal() {
   const [name, setName] = useState("");
@@ -13,7 +12,7 @@ export default function UserModal() {
   const router = useRouter();
 
   const defineNewUser = async () => {
-    const res = await fetch("/user/api", {
+    const res = await fetch(`${baseURL()}/api/user`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
