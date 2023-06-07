@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import prisma from "@/utils/prisma";
 import useUserStore from "@/utils/useUserStore";
 import RentEventComponent from "@/components/RentEventComponent";
-import { getSession } from "@/utils/auth";
+import { getUserSession } from "@/utils/auth";
 
 type Props = { params: { id: string } };
 
@@ -17,7 +17,7 @@ export default async function ItemPage({ params: { id } }: Props) {
 
   if (!item) redirect("/404");
 
-  const user = await getSession();
+  const user = await getUserSession();
 
   const rentEvent = item.currentRentEvent;
   const image = item.image;
