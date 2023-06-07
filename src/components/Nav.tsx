@@ -1,8 +1,8 @@
-import useUserStore from "@/utils/useUserStore";
+import { getUserSession } from "@/utils/auth";
 import LoginActionsContainer from "./LoginActionsContainer";
 
 export default async function Nav() {
-  const user = useUserStore.getState().user;
+  const user = await getUserSession();
   const isAdmin = user?.role === "ADMIN";
 
   return (
