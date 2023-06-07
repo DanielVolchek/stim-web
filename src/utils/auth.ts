@@ -74,7 +74,7 @@ const unauthorizedResponse = (reason: string) => {
   throw new Error(reason);
 };
 
-const authenticationFlow = async (sessionToken: string) => {
+const authenticationFlow = async (sessionToken: string | undefined) => {
   if (!sessionToken) return unauthorizedResponse("No token provided");
 
   const session = await getSessionByToken(sessionToken);
@@ -91,9 +91,15 @@ const getSessionHelper = async (
 ): Promise<SafeUser | null> => {
   if (!sessionToken) return null;
 
-  const res = await fetch(`${baseURL()}/user/`, {
-    method: "POST",
-    body: JSON.stringify({ session: sessionToken }),
+  const headers = new Headers();
+  headers.append(
+    "Set-Cookie",
+    `session=${sessionToken}; SameSite=strict; Secure`
+  );
+  // ${baseURL()}/user?session=${sessionToken}
+  const res = await fetch(`${baseURL()}/user`, {
+    method: "GET",
+    headers,
   });
   const data = await res.json();
 
@@ -103,10 +109,8 @@ const getSessionHelper = async (
   return null;
 };
 
-const getSession = async (): Promise<SafeUser | null> => {
+const getUserSession = async (): Promise<SafeUser | null> => {
   const cookieStore = cookies();
-
-  console.log("getting session");
 
   const sessionToken = cookieStore.get("session")?.value;
 
@@ -121,5 +125,5 @@ export {
   createSessionOnUser,
   getSessionByToken,
   authenticationFlow,
-  getSession,
+  getUserSession,
 };
