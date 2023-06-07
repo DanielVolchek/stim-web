@@ -2,7 +2,7 @@ import { authenticationFlow } from "@/utils/auth";
 import prisma from "@/utils/prisma";
 import { NextResponse } from "next/server";
 
-export async function UPDATE(req: Request) {
+export async function POST(req: Request) {
   const body = await req.json();
 
   let user;
