@@ -1,20 +1,18 @@
 import { redirect } from "next/navigation";
-import { SafeUser, getSession } from "@/utils/auth";
+import { SafeUser, getUserSession } from "@/utils/auth";
 import ItemList from "@/components/ItemList";
 
 export default async function Home() {
   const setSession = async () => {
-    const user = await getSession();
+    const user = await getUserSession();
 
     return user;
   };
 
   const user = await setSession();
 
-  // if admin
-  if (user?.role === "ADMIN") return redirect("/admin");
-
-  return <ItemList user={user as SafeUser} />;
+  return <div></div>;
+  // return <ItemList user={user as SafeUser} />;
   // redirect to /admin
   // or render page differently as if you're an admin
   // if rendering differently than create a zustand store for admin
