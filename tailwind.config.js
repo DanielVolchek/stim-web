@@ -14,11 +14,11 @@ module.exports = {
       },
       colors: {
         // generated from coolor: https://coolors.co/8ed081-b4d2ba-dce2aa-b57f50-4b543b
-        Pistachio: "#8ED081",
-        Celadon: "#B4D2BA",
-        Vanilla: "#DCE2AA",
-        Copper: "#B57F50",
-        Ebony: "#4B543Bk",
+        pistachio: "#8ED081",
+        celadon: "#B4D2BA",
+        vanilla: "#DCE2AA",
+        copper: "#B57F50",
+        ebony: "#4B543B",
       },
     },
   },
