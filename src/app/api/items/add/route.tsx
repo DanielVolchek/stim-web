@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
 
   const { data, error } = await supabase.storage
     .from("images")
-    .upload(uuid(), decode((image as string).split(",")[1]), {
+    .upload("items/" + uuid(), decode((image as string).split(",")[1]), {
       contentType: "image/png",
     });
 
