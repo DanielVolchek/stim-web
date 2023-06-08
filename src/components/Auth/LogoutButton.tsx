@@ -2,8 +2,9 @@
 
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import AuthButtonWrapper from "./AuthButtonWrapper";
 
-export const LogoutButton = ({ session }: { session: string }) => {
+export default function LogoutButton({ session }: { session: string }) {
   const router = useRouter();
 
   // const session = Cookies.get("session");
@@ -17,7 +18,7 @@ export const LogoutButton = ({ session }: { session: string }) => {
 
   return (
     <div>
-      <button onClick={onClick}>{"Logout"}</button>
+      <AuthButtonWrapper onClick={onClick} innerText="Logout" />
     </div>
   );
-};
+}
