@@ -34,7 +34,9 @@ export default async function ItemPage({ params: { id } }: Props) {
   return (
     <div>
       <h1>{item.name}</h1>
-      {image && <Image src={image.url} alt={item.name} />}
+      {image && (
+        <Image src={image.url} alt={item.name} width={100} height={100} />
+      )}
       <p>{item.desc}</p>
       <RentEventComponent rented={rented} rentedByUser={rentedByUser} />
       <Link href={item.purchaseLink}>Link to Purchase</Link>
