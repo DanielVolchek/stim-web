@@ -16,7 +16,6 @@ model User {
   username     String     @unique
   passwordHash String
   sessions     Session[]
-  items        Item[]
   role         Role       @default(USER)
   rentEvent    RentEvent?
 }
@@ -40,8 +39,6 @@ model Item {
   desc             String
   purchaseLink     String
   image            Image?
-  user             User?      @relation(fields: [userID], references: [id])
-  userID           String?
   currentRentEvent RentEvent?
 }
 
