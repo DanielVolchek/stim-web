@@ -1,20 +1,19 @@
-import { cookies } from "next/dist/client/components/headers";
-import { getUserSession } from "@/utils/auth";
-import LoginActionsContainer from "./LoginActionsContainer";
 import Link from "next/link";
+import { getUserSession } from "@/utils/auth";
+import LoginActionsContainer from "./Auth/LoginActionsContainer";
 
 export default async function Nav() {
-  console.log("cookies are ", cookies().get("session")?.value);
-
   const user = await getUserSession();
   const isAdmin = user?.role === "ADMIN";
 
   return (
     <header>
-      <nav>
+      <nav className="flex justify-between border-b-4 border-black p-4">
         <Link href="/">Home</Link>
         {isAdmin && <a href="/admin">Admin</a>}
-        <LoginActionsContainer />
+        <div className="flex">
+          <LoginActionsContainer />
+        </div>
       </nav>
     </header>
   );
