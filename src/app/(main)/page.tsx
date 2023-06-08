@@ -1,5 +1,3 @@
-import { redirect } from "next/navigation";
-import { SafeUser, getUserSession } from "@/utils/auth";
 import ItemList from "@/components/Item/ItemList";
 
 export default async function Home() {

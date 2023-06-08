@@ -1,5 +1,4 @@
 import baseURL from "@/utils/url";
-import { cookies } from "next/dist/client/components/headers";
 import { redirect } from "next/navigation";
 
 type Props = {
@@ -7,9 +6,6 @@ type Props = {
 };
 
 export default async function Logout({ searchParams: { session } }: Props) {
-  const cookieStore = cookies();
-  // const session = cookieStore.get("session");
-
   if (!session) redirect("/");
 
   await fetch(`${baseURL()}/api/user/logout`, {
