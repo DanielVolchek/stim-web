@@ -7,14 +7,15 @@ export default function LoginOrRegisterButtons() {
   const router = useRouter();
 
   return (
-    <div>
-      <AuthButtonWrapper
-        onClick={() => router.push("/login")}
-        innerText="Login"
-      />
+    <div className="flex justify-between gap-4">
       <AuthButtonWrapper
         onClick={() => router.push("/register")}
         innerText="Register"
+      />
+      <AuthButtonWrapper
+        onClick={() => router.push("/login")}
+        innerText="Login"
+        className="bg-copper !text-alabaster"
       />
     </div>
   );
