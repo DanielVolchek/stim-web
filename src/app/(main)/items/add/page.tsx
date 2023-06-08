@@ -6,10 +6,12 @@ import { useRouter } from "next/navigation";
 import FileUploadForm from "@/components/Form/FileUploadComponent";
 import TextInput from "@/components/Form/TextInput";
 import baseURL from "@/utils/url";
-import useUserStore from "@/utils/useUserStore";
+import Cookies from "js-cookie";
+import supabase from "@/utils/Supabase";
+import { v4 as uuid } from "uuid";
 
 type FormData = {
-  image: string;
+  file: string | File | null;
   name: string;
   desc: string;
   link: string;
@@ -18,53 +20,64 @@ type FormData = {
 export default function Form() {
   const router = useRouter();
 
-  const session = useUserStore((state) => state.session);
+  const session = Cookies.get("session");
 
-  const [file, setFile] = useState<File | null>(null);
-  const [name, setName] = useState("");
-  const [desc, setDesc] = useState("");
-  const [link, setLink] = useState("");
+  const [formData, setFormData] = useState<FormData>({
+    file: null,
+    name: "",
+    desc: "",
+    link: "",
+  });
 
   function onNameChange(event: ChangeEvent<HTMLInputElement>) {
-    setName(event.target.value);
+    setFormData({ ...formData, name: event.target.value });
   }
 
   function onDescChange(event: ChangeEvent<HTMLTextAreaElement>) {
-    setDesc(event.target.value);
+    setFormData({ ...formData, desc: event.target.value });
   }
 
   function onLinkChange(event: ChangeEvent<HTMLInputElement>) {
-    setLink(event.target.value);
+    setFormData({ ...formData, link: event.target.value });
   }
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) setFile(event.target.files[0]);
+    if (event.target.files) {
+      setFormData({ ...formData, file: event.target.files[0] });
+    }
   };
 
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
+
+    const { file, name, desc, link } = formData;
 
     if (!file || !name || !desc || !link) {
       return alert("Fill out all elements of the form");
     }
-    console.log(file);
-    readFile(file as File)
-      .then((image) => uploadFile({ image, name, desc, link }))
-      .catch((err) => console.error(err));
-    // Do something with the file, such as upload it to a server
+
+    const { data, error } = await supabase.storage
+      .from("images")
+      .upload(`public/${uuid()}`, file);
+    if (error) {
+      console.log(error);
+      alert("ERROR: Check console for details");
+      throw new Error(error.message);
+    }
+
+    await uploadFile({ file: data.path, name, desc, link });
   };
 
   const uploadFile = async (formData: FormData) => {
-    const res = await fetch(`${baseURL()}/add`, {
+    const res = await fetch(`${baseURL()}/api/items/add`, {
       method: "POST",
       body: JSON.stringify({ formData, session }),
     });
 
     const data = await res.json();
 
-    if (data.id) {
-      router.push(`/item/${data.id}`);
-    }
+    console.log(data);
+    // router.push(`/item/${data.id}`);
 
     if (data.error) {
       alert("FAILED: Check console ");
