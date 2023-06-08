@@ -12,8 +12,14 @@ export default async function ItemCard({ item }: Props) {
 
   return (
     <Link href={`/items/${item.id}`}>
-      <div className="flex basis-1/3 border-2 border-gray-300 p-4">
-        <Image className="" src={item.image?.url as string} alt={item.name} />
+      <div className="hoverEffect flex h-48 border-2 border-celadon p-4 transition-all">
+        <Image
+          className="w-1/3"
+          src={item.image?.url as string}
+          alt={item.name}
+          width={100}
+          height={100}
+        />
         <div className="flex basis-2/3 flex-col gap-4">
           <h3>{item.name}</h3>
           <p>{item.desc}</p>
