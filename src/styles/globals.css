@@ -25,3 +25,7 @@
 /*     ) */
 /*     rgb(var(--background-start-rgb)); */
 /* } */
+
+.hoverEffect{
+@apply hover:-translate-y-[6px] hover:shadow-md hover:shadow-slate-600
+}
