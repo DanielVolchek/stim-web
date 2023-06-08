@@ -114,8 +114,6 @@ const getUserSession = async (): Promise<SafeUser | null> => {
 
   const sessionToken = cookieStore.get("session")?.value;
 
-  console.log(sessionToken);
-
   return await getSessionHelper(sessionToken);
 };
 

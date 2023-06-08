@@ -28,7 +28,6 @@ export default function AuthenticationForm({ type }: Props) {
       }),
     });
     const data = await res.json();
-    console.log(data);
 
     if (data.error) {
     }
