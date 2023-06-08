@@ -13,5 +13,5 @@ export default async function Logout({ searchParams: { session } }: Props) {
     body: JSON.stringify({ session }),
   });
 
-  redirect("/");
+  redirect(`${baseURL()}/`);
 }
