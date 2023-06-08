@@ -1,6 +1,6 @@
 import hash from "crypto-js/md5";
 import { v4 as uuid } from "uuid";
-import { User, Session } from "@prisma/client";
+import { User, Session, RentEvent } from "@prisma/client";
 
 import prisma from "./prisma";
 import baseURL from "./url";
@@ -8,7 +8,9 @@ import { userSchema } from "./zod";
 import { cookies } from "next/dist/client/components/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-type SafeUser = Omit<User, "passwordHash">;
+type SafeUser = Omit<User, "passwordHash"> & {
+  rentEvent?: RentEvent | null;
+};
 
 const generateSession = () => {
   return uuid();
@@ -125,9 +127,14 @@ const LoginOrRegisterUser = async (
 
   const { username, password } = body;
 
-  let user = await prisma.user.findUnique({
+  let user: User | null | undefined;
+
+  user = await prisma.user.findUnique({
     where: {
       username,
+    },
+    include: {
+      rentEvent: type === "LOGIN",
     },
   });
 
