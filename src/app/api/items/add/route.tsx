@@ -1,80 +1,87 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs/promises";
 import { decode } from "base64-arraybuffer";
 
-import prisma from "@/utils/prisma";
 import { authenticationFlow } from "@/utils/auth";
+import { v4 as uuid } from "uuid";
 import supabase from "@/utils/Supabase";
+import prisma from "@/utils/prisma";
+
+export type FormData = {
+  file: string | File | null;
+  name: string;
+  desc: string;
+  link: string;
+};
+
+const BASE_BUCKET_URL =
+  "https://rcbjgrelbmayqxgrxmtb.supabase.co/storage/v1/object/public/images/";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
   console.log(body);
-  //
-  // const { session } = body;
-  //
-  // let user;
-  // try {
-  //   user = await authenticationFlow(session);
-  //   if (user.role !== "ADMIN") throw new Error("Admin privileges required");
-  // } catch (err) {
-  //   return NextResponse.json(
-  //     { error: `Unauthorized: ${err}` },
-  //     { status: 400 }
-  //   );
-  // }
-  //
-  // const { file: image, name, desc, link } = body.formData;
-  //
-  // const getMissingData = (data: {
-  //   image: string;
-  //   name: string;
-  //   desc: string;
-  //   link: string;
-  // }) => {
-  //   let missingData = "";
-  //
-  //   for (let [key, value] of Object.entries(data)) {
-  //     if (!value) missingData += `${key},`;
-  //   }
-  //
-  //   return missingData.substring(0, missingData.length - 1);
-  // };
-  //
-  // if (!image || !name || !desc || !link) {
-  //   return NextResponse.json(
-  //     { error: "Missing data: " + getMissingData({ image, name, desc, link }) },
-  //     { status: 400 }
-  //   );
-  // }
-  //
-  // // add item
-  // // convert image to Image
-  //
-  // const res = await uploadFile(generateImageName(name), image);
-  const res = { data: "hello", error: "boo" };
 
-  if (res.data) {
+  const { session } = body;
+
+  let user;
+  try {
+    user = await authenticationFlow(session);
+    if (user.role !== "ADMIN") throw new Error("Admin privileges required");
+  } catch (err) {
     return NextResponse.json(
-      { message: "Success", data: res.data },
-      { status: 200 }
+      { error: `Unauthorized: ${err}` },
+      { status: 400 }
     );
   }
-  //
-  // return NextResponse.json({ error: res.error }, { status: 400 });
-  //
-  // // upload to supabase
-  // // get url
-  // // upload via prisma
-}
 
-// Upload the file via API
-async function uploadFile(fileName: string, base64: string) {
+  const { file: image, name, desc, link }: FormData = body.formData;
+
+  const getMissingData = (data: Object) => {
+    let missingData = "";
+
+    for (let [key, value] of Object.entries(data)) {
+      if (!value) missingData += `${key},`;
+    }
+
+    return missingData.substring(0, missingData.length - 1);
+  };
+
+  if (!image || !name || !desc || !link) {
+    return NextResponse.json(
+      { error: "Missing data: " + getMissingData({ image, name, desc, link }) },
+      { status: 400 }
+    );
+  }
+
+  // add item
+  // convert image to Image
+
   const { data, error } = await supabase.storage
     .from("images")
-    .upload(`public/${fileName}`, decode(base64), { contentType: "image/png" });
+    .upload(uuid(), decode((image as string).split(",")[1]), {
+      contentType: "image/png",
+    });
+
   if (error) {
-    return { error };
-  } else {
-    return { data };
+    return NextResponse.json({ error: error }, { status: 500 });
   }
+
+  const item = await prisma.item.create({
+    data: {
+      name,
+      desc,
+      purchaseLink: link,
+    },
+  });
+
+  const dbImage = await prisma.image.create({
+    data: {
+      url: BASE_BUCKET_URL + data.path,
+      itemID: item.id,
+    },
+  });
+
+  return NextResponse.json(
+    { message: "Success", item: { ...item, image: dbImage } },
+    { status: 200 }
+  );
 }
