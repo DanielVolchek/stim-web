@@ -16,7 +16,7 @@ module.exports = {
         // generated from coolor: https://coolors.co/8ed081-b4d2ba-dce2aa-b57f50-4b543b
         pistachio: "#8ED081",
         celadon: "#B4D2BA",
-        vanilla: "#DCE2AA",
+        alabaster: "#F3F0E2",
         copper: "#B57F50",
         ebony: "#4B543B",
       },
