@@ -2,20 +2,13 @@
 
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
+import baseURL from "@/utils/url";
 import FileUploadForm from "@/components/Form/FileUploadComponent";
 import TextInput from "@/components/Form/TextInput";
-import baseURL from "@/utils/url";
-import Cookies from "js-cookie";
 import supabase from "@/utils/Supabase";
-import { v4 as uuid } from "uuid";
-
-type FormData = {
-  file: string | File | null;
-  name: string;
-  desc: string;
-  link: string;
-};
+import { FormData } from "@/app/api/items/add/route";
 
 export default function Form() {
   const router = useRouter();
@@ -56,16 +49,16 @@ export default function Form() {
       return alert("Fill out all elements of the form");
     }
 
-    const { data, error } = await supabase.storage
-      .from("images")
-      .upload(`public/${uuid()}`, file);
-    if (error) {
-      console.log(error);
-      alert("ERROR: Check console for details");
-      throw new Error(error.message);
-    }
+    // const { data, error } = await supabase.storage
+    //   .from("images")
+    //   .upload(`public/${uuid()}`, file);
+    // if (error) {
+    //   console.log(error);
+    //   alert("ERROR: Check console for details");
+    //   throw new Error(error.message);
+    // }
 
-    await uploadFile({ file: data.path, name, desc, link });
+    await uploadFile({ file: await readFile(file as File), name, desc, link });
   };
 
   const uploadFile = async (formData: FormData) => {
