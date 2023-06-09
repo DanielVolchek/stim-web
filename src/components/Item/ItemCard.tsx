@@ -7,12 +7,13 @@ import { getUserSession } from "@/utils/auth";
 type Props = {
   item: Item & { image: ImageType | null; currentRentEvent: RentEvent | null };
 };
+
 export default async function ItemCard({ item }: Props) {
   const user = await getUserSession();
 
   return (
     <Link href={`/items/${item.id}`}>
-      <div className="hoverEffect flex h-48 rounded-md border-2 border-celadon p-4 transition-all">
+      <div className="hoverEffect flex h-48 rounded-md border-2 border-celadon p-4 transition-all hover:shadow-celadon">
         <Image
           className="w-1/3 rounded-md"
           src={item.image?.url as string}
