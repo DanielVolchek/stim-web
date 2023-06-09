@@ -12,9 +12,9 @@ export default async function ItemCard({ item }: Props) {
 
   return (
     <Link href={`/items/${item.id}`}>
-      <div className="hoverEffect flex h-48 border-2 border-celadon p-4 transition-all">
+      <div className="hoverEffect flex h-48 rounded-md border-2 border-celadon p-4 transition-all">
         <Image
-          className="w-1/3"
+          className="w-1/3 rounded-md"
           src={item.image?.url as string}
           alt={item.name}
           width={100}
