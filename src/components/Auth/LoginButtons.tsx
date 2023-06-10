@@ -10,7 +10,7 @@ export default function LoginOrRegisterButtons() {
     <div className="flex justify-between gap-4">
       <AuthButtonWrapper
         onClick={() => router.push("/register")}
-        className="bg-copper !text-alabaster"
+        className="!border-alabaster bg-copper !text-alabaster hover:!shadow-alabaster"
         innerText="Register"
       />
       <AuthButtonWrapper
