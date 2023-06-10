@@ -2,7 +2,6 @@
 
 import baseURL from "@/utils/url";
 import { useRouter } from "next/navigation";
-// import { redirect } from "next/navigation";
 import { useEffect } from "react";
 
 type Props = {
