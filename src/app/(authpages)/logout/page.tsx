@@ -1,19 +1,31 @@
+"use client";
+
 import baseURL from "@/utils/url";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+// import { redirect } from "next/navigation";
+import { useEffect } from "react";
 
 type Props = {
   searchParams: { session: string };
 };
 
-export default async function Logout({ searchParams: { session } }: Props) {
-  if (!session) redirect("/");
+export default function Logout({ searchParams: { session } }: Props) {
+  const router = useRouter();
+  if (!session) router.push("/");
 
-  await fetch(`${baseURL()}/api/user/logout`, {
-    method: "GET",
-    headers: {
-      Cookie: session,
-    },
-  });
+  useEffect(() => {
+    (async () => {
+      if (!session) return;
+      await fetch(`${baseURL()}/api/user/logout`, {
+        method: "GET",
+        headers: {
+          Cookie: session,
+        },
+      });
 
-  redirect(`${baseURL()}/`);
+      router.push(`${baseURL()}/`);
+    })();
+  }, [session, router]);
+
+  return <></>;
 }
