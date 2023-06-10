@@ -7,6 +7,7 @@ import baseURL from "./url";
 import { userSchema } from "./zod";
 import { cookies } from "next/dist/client/components/headers";
 import { NextRequest, NextResponse } from "next/server";
+import Cookies from "js-cookie";
 
 type SafeUser = Omit<User, "passwordHash"> & {
   rentEvent?: RentEvent | null;
@@ -95,8 +96,9 @@ const getSessionHelper = async (
 
   const headers = new Headers();
   headers.append(
-    "Set-Cookie",
-    `session=${sessionToken}; SameSite=strict; Secure`
+    // "Set-Cookie",
+    "Cookie",
+    `session=${sessionToken};`
   );
 
   const res = await fetch(`${baseURL()}/api/user`, {
@@ -112,9 +114,9 @@ const getSessionHelper = async (
 };
 
 const getUserSession = async (): Promise<SafeUser | null> => {
-  const cookieStore = cookies();
-
-  const sessionToken = cookieStore.get("session")?.value;
+  let sessionToken;
+  if (typeof window !== "undefined") sessionToken = Cookies.get("session");
+  else sessionToken = cookies().get("session")?.value;
 
   return await getSessionHelper(sessionToken);
 };

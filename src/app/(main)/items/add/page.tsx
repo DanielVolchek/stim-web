@@ -64,7 +64,10 @@ export default function Form() {
   const uploadFile = async (formData: FormData) => {
     const res = await fetch(`${baseURL()}/api/items/add`, {
       method: "POST",
-      body: JSON.stringify({ formData, session }),
+      body: JSON.stringify({ formData }),
+      headers: {
+        Cookie: session as string,
+      },
     });
 
     const data = await res.json();

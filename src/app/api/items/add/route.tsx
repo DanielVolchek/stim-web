@@ -18,9 +18,8 @@ const BASE_BUCKET_URL =
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  console.log(body);
 
-  const { session } = body;
+  const session = req.cookies.get("session")?.value;
 
   let user;
   try {

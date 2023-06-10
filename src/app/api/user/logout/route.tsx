@@ -1,11 +1,9 @@
 import { authenticationFlow } from "@/utils/auth";
 import prisma from "@/utils/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: Request) {
-  const body = await req.json();
-
-  const session = body.session;
+export async function GET(req: NextRequest) {
+  const session = req.cookies.get("session")?.value;
 
   let user;
   try {
@@ -17,7 +15,7 @@ export async function POST(req: Request) {
     );
   }
 
-  await prisma.session.delete({ where: { token: body.session } });
+  await prisma.session.delete({ where: { token: session } });
   return NextResponse.json(
     { message: "Successfully logged out user" },
     { status: 200 }

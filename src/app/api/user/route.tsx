@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { authenticationFlow } from "@/utils/auth";
 
 export async function GET(req: NextRequest) {
-  const sessionToken = req.headers.get("set-cookie");
+  // const sessionToken = req.headers.get("set-cookie");
+  // const session = parseSessionCookie(sessionToken) as string;
 
-  const session = parseSessionCookie(sessionToken) as string;
+  const session = req.cookies.get("session")?.value;
 
   let user;
   try {
