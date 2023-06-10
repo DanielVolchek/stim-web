@@ -9,10 +9,12 @@ export default async function ItemList() {
     include: { image: true, currentRentEvent: true },
   });
 
-  user = await prisma.user.findFirst({
-    where: { id: user?.id },
-    include: { rentEvent: true },
-  });
+  user =
+    user &&
+    (await prisma.user.findFirst({
+      where: { id: user.id },
+      include: { rentEvent: true },
+    }));
 
   return <ClientItemList items={items} user={user} />;
 }
