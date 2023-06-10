@@ -33,7 +33,11 @@ export default function AuthenticationForm({ type }: Props) {
     }
 
     if (data.session) {
-      cookie.set("session", data.session, { expires: 31, secure: true });
+      cookie.set("session", data.session, {
+        expires: 31,
+        secure: true,
+        sameSite: "Strict",
+      });
       router.push("/");
       router.refresh();
     }
