@@ -2,15 +2,14 @@ import { Item, RentEvent, Image as ImageType } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import RentButton from "./RentButton";
-import { getUserSession } from "@/utils/auth";
+import { SafeUser, getUserSession } from "@/utils/auth";
 
 type Props = {
   item: Item & { image: ImageType | null; currentRentEvent: RentEvent | null };
+  user: SafeUser | null;
 };
 
-export default async function ItemCard({ item }: Props) {
-  const user = await getUserSession();
-
+export default function ItemCard({ item, user }: Props) {
   return (
     <Link href={`/items/${item.id}`}>
       <div className="hoverEffect flex h-48 rounded-md border-2 border-celadon p-4 transition-all hover:shadow-celadon">
@@ -24,9 +23,8 @@ export default async function ItemCard({ item }: Props) {
         <div className="flex basis-2/3 flex-col gap-4">
           <h3>{item.name}</h3>
           <p>{item.desc}</p>
+          <RentButton item={item} user={user} />
         </div>
-
-        {/* <RentButton item={item} user={user} /> */}
       </div>
     </Link>
   );
