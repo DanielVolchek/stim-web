@@ -11,6 +11,7 @@ type Props = {
 
 export default function Logout({ searchParams: { session } }: Props) {
   const router = useRouter();
+
   if (!session) router.push("/");
 
   useEffect(() => {
