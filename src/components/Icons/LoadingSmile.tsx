@@ -32,24 +32,20 @@ export default function LoadingSmile() {
           />
         </clipPath>
         <linearGradient id="smiley-grad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#000" />
-          <stop offset="100%" stop-color="#fff" />
+          <stop offset="0%" stopColor="#000" />
+          <stop offset="100%" stopColor="#fff" />
         </linearGradient>
         <mask id="smiley-mask">
           <rect x="0" y="0" width="128" height="128" fill="url(#smiley-grad)" />
         </mask>
       </defs>
-      <g
-        stroke-linecap="round"
-        stroke-width="12"
-        stroke-dasharray="175.93 351.86"
-      >
+      <g strokeLinecap="round" strokeWidth="12" strokeDasharray="175.93 351.86">
         <g>
           <rect
             fill="#8ED081"
             width="128"
             height="64"
-            clip-path="url(#smiley-eyes)"
+            clipPath="url(#smiley-eyes)"
           />
           <g fill="none" stroke="#8ED081">
             <circle
@@ -73,7 +69,7 @@ export default function LoadingSmile() {
             fill="#8ED081"
             width="128"
             height="64"
-            clip-path="url(#smiley-eyes)"
+            clipPath="url(#smiley-eyes)"
           />
           <g fill="none" stroke="#8ED081">
             <circle
