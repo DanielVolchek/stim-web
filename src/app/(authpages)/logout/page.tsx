@@ -24,6 +24,7 @@ export default function Logout({ searchParams: { session } }: Props) {
       });
 
       router.push(`${baseURL()}/`);
+      router.refresh();
     })();
   }, [session, router]);
 
