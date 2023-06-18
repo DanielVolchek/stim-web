@@ -6,7 +6,8 @@ import { SafeUser } from "@/utils/auth";
 import { MouseEventHandler, useEffect, useState } from "react";
 import baseURL from "@/utils/url";
 import Cookies from "js-cookie";
-import useErrorStore from "@/utils/useStore";
+import useErrorStore from "@/utils/useErrorStore";
+import fetchWithErrorHandling from "@/utils/fetchWithErrorHandling";
 
 export default function RentButton({
   item,
@@ -24,20 +25,17 @@ export default function RentButton({
       return null;
     }
 
-    const res = await fetch(`${baseURL()}/api/items/rent`, {
-      method: "POST",
-      body: JSON.stringify({ action, itemID: item.id }),
-      headers: {
-        Cookie: Cookies.get("session") as string,
+    const data = await fetchWithErrorHandling(
+      `${baseURL()}/api/items/rent`,
+      {
+        method: "POST",
+        body: JSON.stringify({ action, itemID: item.id }),
       },
-    });
-
-    const data = await res.json();
+      { withAuth: true }
+    );
 
     console.log(data);
-    if (data.error) {
-      updateError(data.error);
-    } else {
+    if (!data.error) {
       setAction(action === "RENT" ? "RETURN" : "RENT");
     }
   };
