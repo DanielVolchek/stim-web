@@ -6,6 +6,7 @@ import { SafeUser } from "@/utils/auth";
 import { MouseEventHandler, useEffect, useState } from "react";
 import baseURL from "@/utils/url";
 import Cookies from "js-cookie";
+import useErrorStore from "@/utils/useStore";
 
 export default function RentButton({
   item,
@@ -16,8 +17,12 @@ export default function RentButton({
 }) {
   const [action, setAction] = useState<"RENT" | "RETURN" | "RENTED">("RENT");
 
+  const { updateError } = useErrorStore();
+
   const actionHandler = async () => {
-    if (action === "RENTED") return null;
+    if (action === "RENTED") {
+      return null;
+    }
 
     const res = await fetch(`${baseURL()}/api/items/rent`, {
       method: "POST",
@@ -30,7 +35,12 @@ export default function RentButton({
     const data = await res.json();
 
     console.log(data);
-    if (!data.error) setAction(action === "RENT" ? "RETURN" : "RENT");
+    if (data.error) {
+      updateError(data.error);
+    } else {
+      updateError(data.message);
+      setAction(action === "RENT" ? "RETURN" : "RENT");
+    }
   };
 
   useEffect(() => {
@@ -46,8 +56,9 @@ export default function RentButton({
   const onClickHandler: MouseEventHandler<HTMLButtonElement> = (event) => {
     event.stopPropagation();
     event.preventDefault();
-    if (action === "RENTED")
+    if (action === "RENTED") {
       throw new Error("Button was clicked when item is already rented");
+    }
     actionHandler();
   };
 

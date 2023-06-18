@@ -36,7 +36,9 @@ const getUserBySession = async (session: Session) => {
   });
 
   const valid = await validateSessionTime(session);
-  if (!valid || !user) return false;
+  if (!valid || !user) {
+    return false;
+  }
 
   return user;
 };
@@ -78,13 +80,19 @@ const unauthorizedResponse = (reason: string) => {
 };
 
 const authenticationFlow = async (sessionToken: string | undefined) => {
-  if (!sessionToken) return unauthorizedResponse("No token provided");
+  if (!sessionToken) {
+    return unauthorizedResponse("No token provided");
+  }
 
   const session = await getSessionByToken(sessionToken);
-  if (!session) return unauthorizedResponse("token invalid");
+  if (!session) {
+    return unauthorizedResponse("token invalid");
+  }
 
   const user = await getUserBySession(session);
-  if (!user) return unauthorizedResponse("session invalid");
+  if (!user) {
+    return unauthorizedResponse("session invalid");
+  }
 
   return user;
 };
@@ -92,7 +100,9 @@ const authenticationFlow = async (sessionToken: string | undefined) => {
 const getSessionHelper = async (
   sessionToken: string | undefined
 ): Promise<SafeUser | null> => {
-  if (!sessionToken) return null;
+  if (!sessionToken) {
+    return null;
+  }
 
   const headers = new Headers();
   headers.append(
@@ -108,15 +118,20 @@ const getSessionHelper = async (
   const data = await res.json();
 
   const parse = userSchema.safeParse(data.user);
-  if (parse.success) return parse.data;
+  if (parse.success) {
+    return parse.data;
+  }
   console.log(parse.error);
   return null;
 };
 
 const getUserSession = async (): Promise<SafeUser | null> => {
   let sessionToken;
-  if (typeof window !== "undefined") sessionToken = Cookies.get("session");
-  else sessionToken = cookies().get("session")?.value;
+  if (typeof window !== "undefined") {
+    sessionToken = Cookies.get("session");
+  } else {
+    sessionToken = cookies().get("session")?.value;
+  }
 
   return await getSessionHelper(sessionToken);
 };
@@ -191,7 +206,9 @@ const validateUsername = (username: string) => {
   //todo;
   let errors = "";
   const noWhiteSpace = /\s/.test(username);
-  if (noWhiteSpace) errors += "Cannot Contain Whitespace;";
+  if (noWhiteSpace) {
+    errors += "Cannot Contain Whitespace;";
+  }
   return { errors };
 };
 
