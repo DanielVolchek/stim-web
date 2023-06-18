@@ -5,6 +5,7 @@ import cookie from "js-cookie";
 import { useRouter } from "next/navigation";
 
 import { FormEvent, useState } from "react";
+import LoadingSmile from "../Icons/LoadingSmile";
 
 type Props = {
   type: "register" | "login";
@@ -14,10 +15,14 @@ export default function AuthenticationForm({ type }: Props) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const [loading, setLoading] = useState<JSX.Element | null>(null);
+
   const router = useRouter();
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
+    setLoading(() => <LoadingSmile />);
+
     const data = await fetchWithErrorHandling(`${baseURL()}/api/user/${type}`, {
       method: "POST",
       headers: {
@@ -38,15 +43,17 @@ export default function AuthenticationForm({ type }: Props) {
       router.push("/");
       router.refresh();
     }
+
+    if (data.error) {
+      setLoading(null);
+      setUsername("");
+      setPassword("");
+    }
   };
 
   return (
-    <div className="h-screen w-full">
-      <form
-        onSubmit={handleSubmit}
-        className="my-auto flex h-4/6 flex-col items-center"
-      >
-        <h1 className="text-4xl">Login</h1>
+    loading ?? (
+      <form onSubmit={handleSubmit} className="flex w-min flex-col">
         <label htmlFor="username" className="">
           Username
         </label>
@@ -72,7 +79,6 @@ export default function AuthenticationForm({ type }: Props) {
           Submit
         </button>
       </form>
-      <div></div>
-    </div>
+    )
   );
 }
