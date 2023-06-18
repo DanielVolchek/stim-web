@@ -7,10 +7,6 @@ import AuthButtonWrapper from "./AuthButtonWrapper";
 export default function LogoutButton() {
   const router = useRouter();
 
-  // const session = Cookies.get("session");
-  //
-  // if (!session) router.push("/");
-
   const onClick = () => {
     const session = Cookies.get("session");
     Cookies.remove("session");
