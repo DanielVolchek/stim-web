@@ -3,7 +3,7 @@ import baseURL from "@/utils/url";
 import cookie from "js-cookie";
 import { useRouter } from "next/navigation";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 
 type Props = {
   type: "register" | "login";
@@ -44,27 +44,38 @@ export default function AuthenticationForm({ type }: Props) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor="username">Username</label>
-      <input
-        id="username"
-        type="text"
-        value={username}
-        className="rounded-md border-black text-black"
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <label htmlFor="password">Password</label>
-      <input
-        id="password"
-        type="password"
-        value={password}
-        className="rounded-md border-black text-black"
-        onChange={(e) => setPassword(e.target.value)}
-      />
+    <div className="h-screen w-full">
+      <form
+        onSubmit={handleSubmit}
+        className="my-auto flex h-4/6 flex-col items-center"
+      >
+        <h1 className="text-4xl">Login</h1>
+        <label htmlFor="username" className="">
+          Username
+        </label>
+        <input
+          id="username"
+          type="text"
+          value={username}
+          className="rounded-md border-black text-black"
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <label htmlFor="password" className="">
+          Password
+        </label>
+        <input
+          id="password"
+          type="password"
+          value={password}
+          className="rounded-md border-black text-black"
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-      <button type="submit" className="bg-red rounded-md px-4 py-2">
-        Submit
-      </button>
-    </form>
+        <button type="submit" className="bg-red rounded-md px-4 py-2">
+          Submit
+        </button>
+      </form>
+      <div></div>
+    </div>
   );
 }
