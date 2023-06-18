@@ -18,21 +18,15 @@ const baseFail = z.object({
 
 // a function that takes two schemas, passed and failed, and extends them then returns the merge
 
-export const buildRouteSchema = <
-  T extends ZodRawShape,
-  K extends ZodRawShape
->(zodSchemas?: {
-  pass?: z.ZodObject<T>;
-  fail?: z.ZodObject<K>;
+export const buildRouteSchema = <T extends ZodRawShape, K extends ZodRawShape>({
+  pass,
+  fail,
+}: {
+  pass: z.ZodObject<T>;
+  fail: z.ZodObject<K>;
 }) => {
-  if (!zodSchemas) {
-    zodSchemas = { pass: undefined, fail: undefined };
-  }
-
-  const { pass, fail } = zodSchemas;
-
-  const extendedPass = pass ? pass.merge(basePass) : basePass;
-  const extendedFail = fail ? fail.merge(baseFail) : baseFail;
+  const extendedPass = pass.merge(basePass);
+  const extendedFail = fail.merge(baseFail);
 
   const value = z.discriminatedUnion("status", [extendedPass, extendedFail]);
   return value;
