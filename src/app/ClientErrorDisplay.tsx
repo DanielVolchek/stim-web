@@ -1,6 +1,6 @@
 "use client";
 
-import useErrorStore from "@/utils/useStore";
+import useErrorStore from "@/utils/useErrorStore";
 import { MouseEventHandler } from "react";
 
 export default function ClientErrorDisplay() {
