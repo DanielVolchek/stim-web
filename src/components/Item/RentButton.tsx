@@ -38,7 +38,6 @@ export default function RentButton({
     if (data.error) {
       updateError(data.error);
     } else {
-      updateError(data.message);
       setAction(action === "RENT" ? "RETURN" : "RENT");
     }
   };
