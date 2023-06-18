@@ -5,7 +5,14 @@ import { redirect } from "next/navigation";
 export default async function Page() {
   const user = await getUserSession();
 
-  if (user) redirect("/");
+  if (user) {
+    redirect("/");
+  }
 
-  return <AuthenticationForm type={"login"} />;
+  return (
+    <div className="flex flex-col items-center gap-4">
+      <h1 className="text-4xl">Login</h1>
+      <AuthenticationForm type={"login"} />
+    </div>
+  );
 }
