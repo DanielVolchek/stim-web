@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { getUserSession } from "@/utils/auth";
 import LoginActionsContainer from "./Auth/LoginActionsContainer";
-import HomeIcon from "./Icons/Home";
 import Slug from "./Icons/Slug";
 
 export default async function Nav() {
