@@ -1,3 +1,4 @@
+import Nav from "@/components/Nav";
 import "@/styles/globals.css";
 
 export const metadata = {
@@ -16,7 +17,10 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`bg-alabaster ${font.className}`}>{children}</body>
+      <body className={`bg-alabaster ${font.className}`}>
+        <Nav />
+        {children}
+      </body>
     </html>
   );
 }

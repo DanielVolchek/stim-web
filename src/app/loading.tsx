@@ -1,5 +1,5 @@
 import LoadingSmile from "@/components/Icons/LoadingSmile";
 
-export default async function Loading() {
+export default function Loading() {
   return <LoadingSmile />;
 }
