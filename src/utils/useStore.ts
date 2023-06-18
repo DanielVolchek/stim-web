@@ -2,18 +2,18 @@ import { create } from "zustand";
 import { SafeUser } from "./auth";
 
 type State = {
-  user: SafeUser | null | undefined;
-  session: string | null;
+  error: string;
 };
 
 type Actions = {
-  updateUser: (user: SafeUser) => void;
+  updateError: (error: string) => void;
 };
 
-const useUserStore = create<State & Actions>((set) => ({
-  user: null,
-  session: null,
-  updateUser: (user: SafeUser) => set(() => ({ user })),
+const useErrorStore = create<State & Actions>((set) => ({
+  error: "",
+  updateError: (updatedError: string) => {
+    set(() => ({ error: updatedError }));
+  },
 }));
 
-export default useUserStore;
+export default useErrorStore;
