@@ -12,7 +12,7 @@ export default function AuthButtonWrapper({
   return (
     <button
       onClick={onClick}
-      className={`hoverEffect rounded-3xl border border-copper bg-alabaster px-12 py-2 text-copper transition-all  hover:shadow-copper ${className}`}
+      className={`hoverEffect rounded-3xl border border-copper bg-alabaster px-12 py-2 text-copper  hover:shadow-copper ${className}`}
     >
       {innerText}
     </button>
