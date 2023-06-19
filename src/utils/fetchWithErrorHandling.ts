@@ -1,11 +1,13 @@
 import Cookies from "js-cookie";
-import useErrorStore from "./useErrorStore";
+import useClientMessageStore from "./useClientMessageStore";
 
 type HandlerOptions = {
   withAuth?: boolean;
+  onSuccess?: string;
+  onError?: string;
 };
 
-export default async function fetchWithErrorHandling(
+export default async function fetchWithMessageHandling(
   route: string,
   fetchOptions?: { headers?: { [key: string]: any }; [key: string]: any },
   handlerOptions?: HandlerOptions
@@ -22,8 +24,20 @@ export default async function fetchWithErrorHandling(
 
   if (data.error) {
     if (typeof window !== "undefined") {
-      useErrorStore.setState({ error: data.error });
+      useClientMessageStore.setState({
+        clientMessage: {
+          type: "ERROR",
+          message: handlerOptions?.onError && data.error,
+        },
+      });
     }
+  } else {
+    useClientMessageStore.setState({
+      clientMessage: {
+        type: "SUCCESS",
+        message: handlerOptions?.onSuccess && data.message,
+      },
+    });
   }
 
   return data;
