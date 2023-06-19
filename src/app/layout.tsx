@@ -7,7 +7,7 @@ export const metadata = {
 };
 
 import { Playfair_Display } from "next/font/google";
-import ClientErrorDisplay from "./ClientErrorDisplay";
+import ClientMessageDisplay from "./ClientMessageDisplay";
 
 const font = Playfair_Display({ subsets: ["latin"] });
 
@@ -19,7 +19,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`bg-alabaster ${font.className}`}>
-        <ClientErrorDisplay />
+        <ClientMessageDisplay />
         <Nav />
         {children}
       </body>
