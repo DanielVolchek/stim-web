@@ -1,5 +1,5 @@
 "use client";
-import fetchWithErrorHandling from "@/utils/fetchWithErrorHandling";
+import fetchWithMessageHandling from "@/utils/fetchWithErrorHandling";
 import baseURL from "@/utils/url";
 import cookie from "js-cookie";
 import { useRouter } from "next/navigation";
@@ -23,16 +23,19 @@ export default function AuthenticationForm({ type }: Props) {
     event.preventDefault();
     setLoading(() => <LoadingSmile />);
 
-    const data = await fetchWithErrorHandling(`${baseURL()}/api/user/${type}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-        password,
-      }),
-    });
+    const data = await fetchWithMessageHandling(
+      `${baseURL()}/api/user/${type}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      }
+    );
 
     if (data.session) {
       cookie.set("session", data.session, {
