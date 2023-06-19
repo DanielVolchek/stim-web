@@ -24,7 +24,9 @@ export async function POST(req: NextRequest) {
   let user;
   try {
     user = await authenticationFlow(session);
-    if (user.role !== "ADMIN") throw new Error("Admin privileges required");
+    if (user.role !== "ADMIN") {
+      throw new Error("Admin privileges required");
+    }
   } catch (err) {
     return NextResponse.json(
       { error: `Unauthorized: ${err}` },
@@ -38,7 +40,9 @@ export async function POST(req: NextRequest) {
     let missingData = "";
 
     for (let [key, value] of Object.entries(data)) {
-      if (!value) missingData += `${key},`;
+      if (!value) {
+        missingData += `${key},`;
+      }
     }
 
     return missingData.substring(0, missingData.length - 1);
