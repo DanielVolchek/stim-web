@@ -5,9 +5,7 @@ import { Image as ImageType } from "@prisma/client";
 import { SafeUser } from "@/utils/auth";
 import { MouseEventHandler, useEffect, useState } from "react";
 import baseURL from "@/utils/url";
-import Cookies from "js-cookie";
-import useErrorStore from "@/utils/useErrorStore";
-import fetchWithErrorHandling from "@/utils/fetchWithErrorHandling";
+import fetchWithMessageHandling from "@/utils/fetchWithErrorHandling";
 
 export default function RentButton({
   item,
@@ -18,20 +16,22 @@ export default function RentButton({
 }) {
   const [action, setAction] = useState<"RENT" | "RETURN" | "RENTED">("RENT");
 
-  const { updateError } = useErrorStore();
-
   const actionHandler = async () => {
     if (action === "RENTED") {
       return null;
     }
 
-    const data = await fetchWithErrorHandling(
+    const data = await fetchWithMessageHandling(
       `${baseURL()}/api/items/rent`,
       {
         method: "POST",
         body: JSON.stringify({ action, itemID: item.id }),
       },
-      { withAuth: true }
+      {
+        withAuth: true,
+        onSuccess: "Succesfully rented Item",
+        onError: "Failed to rent Item",
+      }
     );
 
     console.log(data);
