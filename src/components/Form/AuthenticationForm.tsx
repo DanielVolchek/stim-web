@@ -1,5 +1,5 @@
 "use client";
-import fetchWithMessageHandling from "@/utils/fetchWithErrorHandling";
+import fetchWithMessageHandling from "@/utils/fetchWithMessageHandling";
 import baseURL from "@/utils/url";
 import cookie from "js-cookie";
 import { useRouter } from "next/navigation";

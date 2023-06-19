@@ -5,7 +5,7 @@ import { Image as ImageType } from "@prisma/client";
 import { SafeUser } from "@/utils/auth";
 import { MouseEventHandler, useEffect, useState } from "react";
 import baseURL from "@/utils/url";
-import fetchWithMessageHandling from "@/utils/fetchWithErrorHandling";
+import fetchWithMessageHandling from "@/utils/fetchWithMessageHandling";
 
 export default function RentButton({
   item,
