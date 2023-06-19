@@ -46,7 +46,7 @@ const rentItem = async (userID: string, itemID: number) => {
 
   if (user?.rentEvent) {
     return NextResponse.json(
-      { error: "User already has rented Item of id " + user.rentEvent.itemID },
+      { error: "User has already rented Item of id " + user.rentEvent.itemID },
       { status: 404 }
     );
   }
