@@ -10,9 +10,11 @@ export default async function Page() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-4">
-      <h1 className="text-4xl">Login</h1>
-      <AuthenticationForm type={"login"} />
-    </div>
+    <main className="h-screen">
+      <div className="flex flex-col items-center gap-4">
+        <h1 className="text-4xl">Login</h1>
+        <AuthenticationForm type={"login"} />
+      </div>
+    </main>
   );
 }
