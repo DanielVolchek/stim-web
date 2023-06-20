@@ -5,7 +5,7 @@ import { Image as ImageType } from "@prisma/client";
 import { SafeUser } from "@/utils/auth";
 import { MouseEventHandler, useEffect, useState } from "react";
 import baseURL from "@/utils/url";
-import fetchWithMessageHandling from "@/utils/fetchWithMessageHandling";
+import { fetchWithMessageHandling } from "@/utils/fetch/fetchUtils";
 
 export default function RentButton({
   item,
@@ -22,15 +22,14 @@ export default function RentButton({
     }
 
     const data = await fetchWithMessageHandling(
-      `${baseURL()}/api/items/rent`,
+      {
+        route: `${baseURL()}/api/items/rent`,
+        withAuth: true,
+        successMessage: "Succesfully rented Item",
+      },
       {
         method: "POST",
         body: JSON.stringify({ action, itemID: item.id }),
-      },
-      {
-        withAuth: true,
-        onSuccess: "Succesfully rented Item",
-        onError: "Failed to rent Item",
       }
     );
 
@@ -59,16 +58,16 @@ export default function RentButton({
     actionHandler();
   };
 
-  if (action === "RENTED") {
-    return <span>Sorry this is already rented :(</span>;
-  }
-
-  return (
+  return user ? (
     <button
       onClick={onClickHandler}
-      className="rounded-xl border-2 border-copper"
+      className="absolute bottom-0 rounded-xl border-2 border-copper px-2"
     >
-      {action}
+      {action === "RENTED" ? (
+        <span>Sorry this is already rented :(</span>
+      ) : (
+        <span>{action}</span>
+      )}
     </button>
-  );
+  ) : null;
 }
