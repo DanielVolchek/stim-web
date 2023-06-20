@@ -1,5 +1,5 @@
 "use client";
-import fetchWithMessageHandling from "@/utils/fetchWithMessageHandling";
+import { fetchWithMessageHandling } from "@/utils/fetch/fetchUtils";
 import baseURL from "@/utils/url";
 import cookie from "js-cookie";
 import { useRouter } from "next/navigation";
@@ -24,7 +24,11 @@ export default function AuthenticationForm({ type }: Props) {
     setLoading(() => <LoadingSmile />);
 
     const data = await fetchWithMessageHandling(
-      `${baseURL()}/api/user/${type}`,
+      {
+        route: `${baseURL()}/api/user/${type}`,
+        withAuth: true,
+        noSuccessMessage: true,
+      },
       {
         method: "POST",
         headers: {
