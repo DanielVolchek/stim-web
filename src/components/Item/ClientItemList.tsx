@@ -46,27 +46,28 @@ export default function ClientItemList({ items, user }: Props) {
       if (
         filterSettings.search &&
         !item.name.toLowerCase().includes(filterSettings.search.toLowerCase())
-      )
+      ) {
         return null;
+      }
 
       return renderedItem;
     });
   }, [items, user, filterSettings]);
 
   return (
-    <section>
+    <section className="mx-auto my-4 flex w-2/3 flex-col gap-4">
       <Filter
         filterChangeEvent={modifyFilterSettings}
         filterSettings={filterSettings}
       />
-      <div className="mx-auto my-4 flex w-1/2 flex-col gap-4">
+      <div className="flex flex-col gap-4">
         {rentedItem && (
           <>
             <h2 className="text-2xl">Rented: </h2>
             <div className="mb-6">{rentedItem}</div>
           </>
         )}
-        <h2 className="text-2xl">Items Available:</h2>
+        <h2 className="text-2xl">Items:</h2>
         {itemsRendered}
       </div>
     </section>

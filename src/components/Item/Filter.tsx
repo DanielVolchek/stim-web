@@ -24,21 +24,24 @@ export default function Filter({ filterSettings, filterChangeEvent }: Props) {
   };
 
   return (
-    <div>
+    <div className="flex flex-col items-start">
       <label htmlFor="search">Search: </label>
       <input
+        className="rounded-md"
         type="text"
         id="search"
         onChange={searchEventHandler}
         value={filterSettings.search}
       />
-      <label htmlFor="showOnlyAvailable">Show Only Available: </label>
-      <input
-        type="checkbox"
-        id="showOnlyAvailable"
-        onChange={toggleRentedEventHandler}
-        checked={filterSettings.showOnlyAvailable}
-      />
+      <div>
+        <label htmlFor="showOnlyAvailable">Show Only Available: </label>
+        <input
+          type="checkbox"
+          id="showOnlyAvailable"
+          onChange={toggleRentedEventHandler}
+          checked={filterSettings.showOnlyAvailable}
+        />
+      </div>
     </div>
   );
 }
