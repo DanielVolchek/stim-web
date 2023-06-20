@@ -8,7 +8,7 @@ export default async function Nav() {
   const isAdmin = user?.role === "ADMIN";
 
   return (
-    <header className="bg-celadon text-alabaster">
+    <header className="h-18 bg-celadon text-alabaster">
       <nav className="flex items-center justify-between px-8 py-2">
         <Link href="/">
           <Slug className="w-12 -scale-x-100 fill-copper transition-colors duration-[25ms] hover:fill-alabaster" />
