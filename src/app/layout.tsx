@@ -8,6 +8,7 @@ export const metadata = {
 
 import { Playfair_Display } from "next/font/google";
 import ClientMessageDisplay from "./ClientMessageDisplay";
+import Footer from "@/components/Footer";
 
 const font = Playfair_Display({ subsets: ["latin"] });
 
@@ -18,10 +19,13 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`bg-alabaster ${font.className}`}>
+      <body
+        className={`bg-alabaster ${font.className} flex h-screen w-screen flex-col`}
+      >
         <ClientMessageDisplay />
         <Nav />
         {children}
+        <Footer />
       </body>
     </html>
   );
