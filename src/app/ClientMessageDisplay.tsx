@@ -8,7 +8,9 @@ export default function ClientMessageDisplay() {
 
   return clientMessage ? (
     <Popup onClose={() => updateClientMessage(undefined)} className="!z-20">
-      <h1 className="text-4xl">{clientMessage.type}: </h1>
+      <div className="mb-2 border-b border-black pb-2">
+        <h1 className="text-4xl">{clientMessage.type}: </h1>
+      </div>
       <span className="text-2xl">{clientMessage.message}</span>
     </Popup>
   ) : null;

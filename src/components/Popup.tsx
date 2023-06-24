@@ -36,7 +36,7 @@ export default function Popup({
     >
       <div
         onClick={onInnerClick}
-        className="relative z-20 w-1/4 bg-white opacity-100"
+        className="relative z-20 w-1/4 rounded-md bg-alabaster p-8 opacity-100"
       >
         {canClose && (
           <button className="absolute right-0 top-0 text-xl" onClick={close}>
