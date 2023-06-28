@@ -8,9 +8,7 @@ export default function LogoutButton() {
   const router = useRouter();
 
   const onClick = () => {
-    const session = Cookies.get("session");
-    Cookies.remove("session");
-    router.push(`/logout?session=${session}`);
+    router.push(`/logout`);
   };
 
   return (

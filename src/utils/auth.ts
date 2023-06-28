@@ -205,9 +205,12 @@ const LoginOrRegisterUser = async (
 const validateUsername = (username: string) => {
   //todo;
   let errors = "";
+  if (username === "") {
+    errors += "Cannot be blank; ";
+  }
   const noWhiteSpace = /\s/.test(username);
   if (noWhiteSpace) {
-    errors += "Cannot Contain Whitespace;";
+    errors += "Cannot contain whitespace; ";
   }
   return { errors };
 };

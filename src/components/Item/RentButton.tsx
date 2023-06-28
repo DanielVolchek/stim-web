@@ -6,15 +6,21 @@ import { SafeUser } from "@/utils/auth";
 import { MouseEventHandler, useEffect, useState } from "react";
 import baseURL from "@/utils/url";
 import { fetchWithMessageHandling } from "@/utils/fetch/fetchUtils";
+import useClientMessageStore from "@/utils/useClientMessageStore";
 
 export default function RentButton({
   item,
   user,
 }: {
-  item: Item & { image: ImageType | null; currentRentEvent: RentEvent | null };
+  item: Item & {
+    image: ImageType | null;
+    currentRentEvent: RentEvent | null;
+  };
   user: SafeUser | null;
 }) {
   const [action, setAction] = useState<"RENT" | "RETURN" | "RENTED">("RENT");
+
+  const { updateClientMessage } = useClientMessageStore();
 
   const actionHandler = async () => {
     if (action === "RENTED") {
@@ -53,9 +59,13 @@ export default function RentButton({
     event.stopPropagation();
     event.preventDefault();
     if (action === "RENTED") {
-      throw new Error("Button was clicked when item is already rented");
+      updateClientMessage({
+        type: "ERROR",
+        message: "Sorry, this item is already rented",
+      });
+    } else {
+      actionHandler();
     }
-    actionHandler();
   };
 
   return user ? (

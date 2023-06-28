@@ -15,7 +15,9 @@ export default async function ItemPage({ params: { id } }: Props) {
     include: { currentRentEvent: true, image: true },
   });
 
-  if (!item) redirect("/404");
+  if (!item) {
+    redirect("/404");
+  }
 
   const user = await getUserSession();
 

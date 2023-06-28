@@ -23,7 +23,9 @@ export async function GET(req: NextRequest) {
 
 function parseSessionCookie(cookieString: string | null) {
   // wish I didn't have to use this
-  if (!cookieString) return null;
+  if (!cookieString) {
+    return null;
+  }
   const cookieRegex = /(^| )session=([^;]+)/;
   // const cookieRegex = /session=([^;]+);.*SameSite=Strict;.*Secure/;
   const match = cookieString.match(cookieRegex);

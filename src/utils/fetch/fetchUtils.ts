@@ -6,7 +6,7 @@ import {
   FetchUtilOptions,
 } from "./types";
 
-export async function FetchUtil(
+export async function fetchUtil(
   handlerOptions: FetchUtilOptions,
   fetchOptions?: FetchAPIOptions
 ) {
@@ -29,7 +29,7 @@ export async function fetchWithMessageHandling(
   handlerOptions: FetchWithMessageOptions,
   fetchOptions?: FetchAPIOptions
 ) {
-  const data = await FetchUtil(handlerOptions, fetchOptions);
+  const data = await fetchUtil(handlerOptions, fetchOptions);
 
   if (data.error) {
     if (typeof window !== "undefined") {
